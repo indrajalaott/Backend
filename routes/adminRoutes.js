@@ -53,7 +53,7 @@ const cpUpload = imageUpload.fields([
   { name: 'movieVideo', maxCount: 1 }
 ]);
 
-router.post('/login', adminAuth, adminController.adminLogin);
+router.post('/login', adminController.adminLogin);
 router.post('/add-carousel', carouselImage.single('image'), adminAuth, adminController.addCarousels);
 router.post('/add-movie-details', cpUpload, adminController.movieDetails);
 router.post('/add-videos', videoUpload.single('video'), adminController.AddVideos);
