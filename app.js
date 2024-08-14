@@ -15,7 +15,7 @@ const port = process.env.PORT || 3000;
 
 // Enable CORS for all origins
 app.use(cors({
-  origin: '*', // Allow requests from any origin
+  origin: 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify the allowed methods
   credentials: true // Allow credentials if needed
 }));
