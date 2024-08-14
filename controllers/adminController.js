@@ -19,23 +19,24 @@ const adminLogin = async (req, res) => {
           return res.status(400).json({ error: 'Email and password are required' });
       }
 
-      // Find user by email
-      const user = await admins.findOne({ email });
-      if (!user) {
-          return res.status(401).json({ error: "Login failed: User not found" });
+      // Find admin by email
+      const admin = await Admin.findOne({ email });
+      if (!admin) {
+          return res.status(401).json({ error: "Login failed: Admin not found" });
       }
 
-      // Compare provided password with stored hash
-      const passwordMatch = await bcrypt.compare(password, user.password);
-      if (!passwordMatch) {
+      const hashedInputPassword = await bcrypt.hash(password, 10);
+
+      // Compare the generated hash with the stored admin password
+      if (hashedInputPassword !== admin.password) {
           return res.status(401).json({ error: "Login failed: Invalid password" });
       }
 
       // Generate JWT token
-      const token = jwt.sign({ userId: user._id }, process.env.SECRET, { expiresIn: '1d' });
+      const token = jwt.sign({ adminId: admin._id }, process.env.JWT_ADMIN_SECRET, { expiresIn: '1d' });
       return res.status(200).json({ token });
   } catch (error) {
-      console.error("Error during login:", error);
+      console.error("Error during admin login:", error);
       return res.status(500).json({ error: "Internal server error" });
   }
 };
