@@ -2,61 +2,45 @@ const express = require("express");
 const router = express.Router();
 const adminController = require("../controllers/adminController");
 const adminAuth = require('../middleware/adminAuth');
-
 const multer = require("multer");
 
 // Image storage configurations
 const imagestorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./public/movieImage");
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, `${uniqueSuffix}-${file.originalname}`);
-  }
+    destination: (req, file, cb) => {
+        cb(null, "./public/movieImage");
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        cb(null, `${uniqueSuffix}-${file.originalname}`);
+    }
 });
 
 const imageUpload = multer({ storage: imagestorage });
 
+// Video storage configurations
 const videostorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./public/movieVideos");
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, `${uniqueSuffix}-${file.originalname}`);
-  }
+    destination: (req, file, cb) => {
+        cb(null, "./public/movieVideos");
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        cb(null, `${uniqueSuffix}-${file.originalname}`);
+    }
 });
 
 const videoUpload = multer({ storage: videostorage });
 
-// Carousel image storage configuration
-const carouselstorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./public/carouselImages");
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, `${uniqueSuffix}-${file.originalname}`);
-  }
-});
-
-const carouselImage = multer({ storage: carouselstorage });
-
-// Configure multer to handle multiple file uploads
+// Configure multer to handle multiple file uploads for movie details
 const cpUpload = imageUpload.fields([
-  { name: 'movieFullImage', maxCount: 1 },
-  { name: 'movieLogoImage', maxCount: 1 },
-  { name: 'movieMobileImage', maxCount: 1 },
-  { name: 'smallMovieImage', maxCount: 1 },
-  { name: 'trailerVideo', maxCount: 1 },
-  { name: 'movieVideo', maxCount: 1 }
+    { name: 'movieFullImage', maxCount: 1 },
+    { name: 'movieLogoImage', maxCount: 1 },
+    { name: 'movieMobileImage', maxCount: 1 },
+    { name: 'smallMovieImage', maxCount: 1 },
+    { name: 'trailerVideo', maxCount: 1 },
+    { name: 'movieVideo', maxCount: 1 }
 ]);
-
 router.post('/login', adminController.adminLogin);
-router.post('/add-carousel', carouselImage.single('image'), adminAuth, adminController.addCarousels);
-router.post('/add-movie-details', cpUpload, adminController.movieDetails);
-router.post('/add-videos', videoUpload.single('video'), adminController.AddVideos);
+router.post('/add-videos', adminAuth, cpUpload, adminController.AddVideos);
 router.get('/videos/:id', adminController.videoStreams);
 
 
