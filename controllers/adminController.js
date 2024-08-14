@@ -20,7 +20,7 @@ const adminLogin = async (req, res) => {
       }
 
       // Find user by email
-      const user = await User.findOne({ email });
+      const user = await admins.findOne({ email });
       if (!user) {
           return res.status(401).json({ error: "Login failed: User not found" });
       }
