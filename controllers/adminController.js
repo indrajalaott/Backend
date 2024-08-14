@@ -11,26 +11,19 @@ const Recommendation = require('../models/Recommendation');
 
 const adminLogin = async (req, res) => {
   try {
-      const { email, password } = req.body;
+    const { email, password } = req.body;
 
-      // Check if email and password are provided
-      if (!email || !password) {
-          console.log("Email or password not provided");
-          return res.status(400).json({ error: 'Email and password are required' });
-      }
+    // Find admin by email
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
 
-      // Find admin by email
-      const admin = await Admin.findOne({ email });
-      if (!admin) {
-          return res.status(401).json({ error: "Login failed: Admin not found" });
-      }
-
-      const hashedInputPassword = await bcrypt.hash(password, 10);
-
-      // Compare the generated hash with the stored admin password
-      if (hashedInputPassword !== admin.password) {
-          return res.status(401).json({ error: "Login failed: Invalid password" });
-      }
+    // Compare the password with the hashed password
+    const isPasswordValid = await bcrypt.compare(password, admin.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
 
       // Generate JWT token
       const token = jwt.sign({ adminId: admin._id }, process.env.JWT_ADMIN_SECRET, { expiresIn: '1d' });
