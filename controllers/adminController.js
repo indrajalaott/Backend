@@ -11,29 +11,32 @@ const Recommendation = require('../models/Recommendation');
 
 const adminLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+      const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ mesage: "Fields not required " });
-    }
-    const User = await Admin.findOne({ email });
-    if (!User) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-    const isPassword = await bcrypt.compare(password, User.password);
-    if (!isPassword) {
-      res.status(400).json({ message: "Invalid credentials" });
-    }
-    const payload = {
-      id: User.id, isAdmin: User.isAdmin
-    }
-    const token = jwt.sign(payload, jwtsecret, { expiresIn: '1d' });
+      // Check if email and password are provided
+      if (!email || !password) {
+          console.log("Email or password not provided");
+          return res.status(400).json({ error: 'Email and password are required' });
+      }
 
-    res.status(200).json({ token });
+      // Find user by email
+      const user = await User.findOne({ email });
+      if (!user) {
+          return res.status(401).json({ error: "Login failed: User not found" });
+      }
 
+      // Compare provided password with stored hash
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (!passwordMatch) {
+          return res.status(401).json({ error: "Login failed: Invalid password" });
+      }
+
+      // Generate JWT token
+      const token = jwt.sign({ userId: user._id }, process.env.SECRET, { expiresIn: '1d' });
+      return res.status(200).json({ token });
   } catch (error) {
-    console.error("Error logging in admin:", error.message);
-    res.status(500).json({ error: "Internal Server Error" })
+      console.error("Error during login:", error);
+      return res.status(500).json({ error: "Internal server error" });
   }
 };
 
