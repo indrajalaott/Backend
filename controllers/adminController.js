@@ -238,6 +238,8 @@ const createList = async (req, res) => {
             return res.status(400).json({ message: 'List with this name already exists' });
         }
 
+        
+
         // Create a new list
         const newList = new Recommendation({
             name,
@@ -253,6 +255,7 @@ const createList = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 
 const fetchAllMovies = async (req, res) => {
