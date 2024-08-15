@@ -70,6 +70,14 @@ router.delete('/movies/:id', adminAuth, adminController.getIndividualMovieDelete
 // POST route to create a new list in Recommendations
 router.post('/Create-list', adminAuth, adminController.createList);
 
+// POST route to Delete a  list in Recommendations
+router.delete('/list', adminAuth, adminController.deleteList);
+
+// POST route to Add a Items to a list in Recommendations
+router.post('/listAddItems', adminAuth, adminController.addItems);
+
+// POST route to Remove Items from a list in Recommendations
+router.post('/listRemoveItems', adminAuth, adminController.removeItems);
 
 
 module.exports = router;

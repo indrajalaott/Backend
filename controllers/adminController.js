@@ -311,6 +311,91 @@ const getIndividualMovieDelete = async (req, res) => {
 };
 
 
+
+const deleteList = async (req, res) => {
+    const { name } = req.body; // Expecting the list name to be passed in the request body
+
+    // Log the received body for debugging
+    console.log('Received body:', req.body);
+
+    try {
+        // Find and delete the list by name
+        const deletedList = await Recommendation.findOneAndDelete({ name });
+
+        // Check if the list was found and deleted
+        if (!deletedList) {
+            return res.status(404).json({ message: 'List not found' });
+        }
+
+        res.status(200).json({ message: 'List deleted successfully', deletedList });
+    } catch (error) {
+        console.error('Error deleting list:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+const addItems = async (req, res) => {
+    const { name, items } = req.body;
+
+    // Basic validation
+    if (!name || !Array.isArray(items)) {
+        return res.status(400).json({ message: 'Invalid input: name and items are required' });
+    }
+
+    try {
+        // Find the list by name
+        const list = await Recommendation.findOne({ name });
+
+        if (!list) {
+            return res.status(404).json({ message: 'List not found' });
+        }
+
+        // Add the new items to the existing items array
+        // Optionally handle duplicates
+        list.items = [...new Set([...list.items, ...items])];
+
+        // Save the updated list
+        await list.save();
+
+        res.status(200).json({ message: 'Items added successfully', list });
+    } catch (error) {
+        console.error('Error adding items:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+const removeItems = async (req, res) => {
+    const { name, items } = req.body;
+
+    // Basic validation
+    if (!name || !Array.isArray(items)) {
+        return res.status(400).json({ message: 'Invalid input: name and items are required' });
+    }
+
+    try {
+        // Find the list by name
+        const list = await Recommendation.findOne({ name });
+
+        if (!list) {
+            return res.status(404).json({ message: 'List not found' });
+        }
+
+        // Remove the specified items from the existing items array
+        list.items = list.items.filter(item => !items.includes(item));
+
+        // Save the updated list
+        await list.save();
+
+        res.status(200).json({ message: 'Items removed successfully', list });
+    } catch (error) {
+        console.error('Error removing items:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+
+
 module.exports = {
     adminLogin,
     addCarousels,
@@ -320,6 +405,13 @@ module.exports = {
     getIndividualMovieDelete,
     getIndividualMovieById,
     AddVideos,
+
+
+    addItems,
+    removeItems,
+
+    
+    deleteList,
     videoStreams,
     movieDetails,
     getIndividualMovieDetails,
