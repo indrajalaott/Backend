@@ -20,17 +20,23 @@ app.use(cors({
   credentials: true // Allow credentials if needed
 }));
 
-app.use(express.json());
+// Set limit for JSON body size
+app.use(express.json({ limit: '2gb' })); // Set limit to 2 GB
+
+// Define routes
 app.use("/api/admin", admin);
 app.use("/api/user", user);
 app.use("/api/Payments", Payment);
 
+// Serve static files
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
+// Basic route
 app.get("/", (req, res) => {
     res.send("Hello, Shortfilm Viewers ...");
 });
 
+// Start the server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

@@ -254,11 +254,68 @@ const createList = async (req, res) => {
     }
 };
 
+
+const fetchAllMovies = async (req, res) => {
+    try {
+        const movies = await Movies.find({}, '-__v'); // Exclude the __v field if you want
+
+        if (movies.length === 0) {
+            return res.status(404).json({ message: "No movies found" });
+        }
+
+        res.status(200).json(movies);
+    } catch (error) {
+        console.error("Error fetching all movies:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
+const getIndividualMovieById = async (req, res) => {
+    try {
+        const { id } = req.params; // Get the movie ID from the request parameters
+
+        // Find the movie by ID
+        const movie = await Movies.findById(id);
+        if (!movie) {
+            return res.status(404).json({ error: "Movie not found" });
+        }
+
+        // Return the movie details
+        res.status(200).json(movie);
+    } catch (error) {
+        console.error("Error fetching movie details:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
+const getIndividualMovieDelete = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const deletedMovie = await Movies.findByIdAndDelete(id);
+
+        if (!deletedMovie) {
+            return res.status(404).json({ error: 'Movie not found' });
+        }
+
+        res.status(200).json({ message: 'Movie deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to delete movie' });
+    }
+};
+
+
 module.exports = {
     adminLogin,
     addCarousels,
+    fetchAllMovies,
     deleteCarousel,
     createList,
+    getIndividualMovieDelete,
+    getIndividualMovieById,
     AddVideos,
     videoStreams,
     movieDetails,

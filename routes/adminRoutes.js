@@ -4,6 +4,11 @@ const adminController = require("../controllers/adminController");
 const adminAuth = require('../middleware/adminAuth');
 const multer = require("multer");
 
+// Set multer limits to accept larger files
+const uploadLimits = {
+    fileSize: 1024 * 1024 * 1024 * 2 // Set limit to 2 GB (adjust as needed)
+};
+
 // Image storage configurations
 const imagestorage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -15,7 +20,7 @@ const imagestorage = multer.diskStorage({
     }
 });
 
-const imageUpload = multer({ storage: imagestorage });
+const imageUpload = multer({ storage: imagestorage, limits: uploadLimits });
 
 // Video storage configurations
 const videostorage = multer.diskStorage({
@@ -28,7 +33,7 @@ const videostorage = multer.diskStorage({
     }
 });
 
-const videoUpload = multer({ storage: videostorage });
+const videoUpload = multer({ storage: videostorage, limits: uploadLimits });
 
 // Configure multer to handle multiple file uploads for movie details
 const cpUpload = imageUpload.fields([
@@ -39,9 +44,10 @@ const cpUpload = imageUpload.fields([
     { name: 'trailerVideo', maxCount: 1 },
     { name: 'movieVideo', maxCount: 1 }
 ]);
+
 router.post('/login', adminController.adminLogin);
 router.post('/add-videos', adminAuth, cpUpload, adminController.AddVideos);
-router.get('/videos/:id', adminController.videoStreams);
+router.get('/videos/:id', adminController.videoStreams)
 
 
 // Route to Fetch the Individual Details of the Movie where the URL of Movie is passed
@@ -50,7 +56,20 @@ router.get('/Individual-MovieDetails/:url', adminController.getIndividualMovieDe
 //Latest Movies Fetching
 router.get('/Corrosil-Desktop', adminController.getLastThreeMovies);
 
+
+// GET route to list all movies
+router.get('/movies', adminAuth, adminController.fetchAllMovies); 
+
+
+// Route to fetch individual movie by ID
+router.get('/movies/:id', adminAuth, adminController.getIndividualMovieById);
+
+// Route to Delete individual movie by ID
+router.delete('/movies/:id', adminAuth, adminController.getIndividualMovieDelete);
+
 // POST route to create a new list in Recommendations
 router.post('/Create-list', adminAuth, adminController.createList);
+
+
 
 module.exports = router;
