@@ -79,5 +79,9 @@ router.post('/listAddItems', adminAuth, adminController.addItems);
 // POST route to Remove Items from a list in Recommendations
 router.post('/listRemoveItems', adminAuth, adminController.removeItems);
 
+// POST route to list Movies in a List in Recommendations
+router.post('/fetch-movie-detailss', adminAuth, adminController.fetchMovieDetailsByRecommendationName);
+
+
 
 module.exports = router;

@@ -393,6 +393,45 @@ const removeItems = async (req, res) => {
     }
 };
 
+const fetchMovieDetailsByRecommendationName = async (req, res) => {
+    const { name } = req.body;
+
+    // Basic validation
+    if (!name) {
+        return res.status(400).json({ message: 'Invalid input: name is required' });
+    }
+
+    try {
+        // Find the Recommendation list by name
+        const recommendation = await Recommendation.findOne({ name });
+
+        if (!recommendation) {
+            return res.status(404).json({ message: 'Recommendation list not found' });
+        }
+
+        // Fetch movie details for the IDs in the recommendation list
+        const movieIds = recommendation.items; // Assuming items field contains movie IDs
+        if (!Array.isArray(movieIds) || movieIds.length === 0) {
+            return res.status(404).json({ message: 'No movies found in the recommendation list' });
+        }
+
+        // Fetch movies from the database
+        const movies = await Movies.find({ '_id': { $in: movieIds } });
+
+        // Map the result to extract relevant details
+        const movieDetails = movies.map(movie => ({
+            name: movie.movieName,
+            description: movie.description,
+            category: movie.category,
+            url: movie.url
+        }));
+
+        res.status(200).json({ message: 'Movie details fetched successfully', movies: movieDetails });
+    } catch (error) {
+        console.error('Error fetching movie details by recommendation name:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
 
 
 
@@ -408,9 +447,10 @@ module.exports = {
 
 
     addItems,
-    removeItems,
+    removeItems,    
+    fetchMovieDetailsByRecommendationName,
 
-    
+
     deleteList,
     videoStreams,
     movieDetails,
