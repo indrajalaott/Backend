@@ -46,6 +46,8 @@ const cpUpload = imageUpload.fields([
 ]);
 
 router.post('/login', adminController.adminLogin);
+
+//Add Movie Post
 router.post('/add-videos', adminAuth, cpUpload, adminController.AddVideos);
 router.get('/videos/:id', adminController.videoStreams)
 

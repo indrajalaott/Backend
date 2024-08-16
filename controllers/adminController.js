@@ -135,12 +135,12 @@ const AddVideos = async (req, res) => {
           duration,
           rating,
           url,
-          movieFullImage: movieFullImage ? `/movieImages/${movieFullImage}` : null,
-          movieLogoImage: movieLogoImage ? `/movieImages/${movieLogoImage}` : null,
-          movieMobileImage: movieMobileImage ? `/movieImages/${movieMobileImage}` : null,
-          smallMovieImage: smallMovieImage ? `/movieImages/${smallMovieImage}` : null,
-          trailerVideo: trailerVideo ? `/movieVideos/${trailerVideo}` : null,
-          movieVideo: movieVideo ? `/movieVideos/${movieVideo}` : null,
+          movieFullImage: movieFullImage ? `/carouselImage/${movieFullImage}` : null,
+          movieLogoImage: movieLogoImage ? `/movieImage/${movieLogoImage}` : null,
+          movieMobileImage: movieMobileImage ? `/imageGallery/${movieMobileImage}` : null,
+          smallMovieImage: smallMovieImage ? `/imageGallery/${smallMovieImage}` : null,
+          trailerVideo: trailerVideo ? `/videoGallery/${trailerVideo}` : null,
+          movieVideo: movieVideo ? `/videosUpload/${movieVideo}` : null,
       });
 
       // Respond with the newly created movie entry
