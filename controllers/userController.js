@@ -53,7 +53,7 @@ const login = async (req, res) => {
                 return res.status(401).json({ message: "no authentication" })
             }
             const token = jwt.sign({ userId: user._id }, process.env.SECRET, { expiresIn: '30d' })
-            res.status(201).json({ token })
+            res.status(200).json({ token })
         } else {
             console.log("not found");
             res.status(404).json({ error: 'no data' })
