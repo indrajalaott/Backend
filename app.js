@@ -13,10 +13,9 @@ const app = express();
 
 const port = process.env.PORT || 3000;
 
-// Enable CORS for all origins
 app.use(cors({
-  origin: 'https://cdn.indrajala.in',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify the allowed methods
+  origin: '*', // Allow all origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Specify the allowed methods
   credentials: true // Allow credentials if needed
 }));
 
