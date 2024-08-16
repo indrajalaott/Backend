@@ -219,7 +219,7 @@ const getLastThreeMovies = async (req, res) => {
     try {
         const movies = await Movies.find({}, 'movieFullImage movieName year rating')
             .sort({ createdAt: -1 })
-            .limit(3);
+            .limit(5);
 
         res.status(200).json(movies);
     } catch (error) {
