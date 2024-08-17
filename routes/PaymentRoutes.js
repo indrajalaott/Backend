@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const userController = require('../controllers/PaymentControl');
-const { userAuth } = require('../middleware/userAuth');
+const userController = require('../controllers/userController');
+const {userAuth}=require('../middleware/userAuth');
 
-// Payment route PhonePe PaymentGateay
-router.post('/paymentPhonepe', userAuth, userController.triggerPaymentPhonePey);
 
-module.exports = router;
+
+// register and login routes
+
+router.post('/phonepe',userAuth,userController.register);                                 //Tested
+
+
+module.exports = router

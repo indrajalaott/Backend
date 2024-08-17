@@ -25,7 +25,7 @@ app.use(express.json({ limit: '2gb' })); // Set limit to 2 GB
 // Define routes
 app.use("/api/admin", admin);
 app.use("/api/user", user);
-app.use("/api/Payments", Payment);
+app.use("/api/pay", Payment);
 
 // Serve static files
 app.use('/public', express.static(path.join(__dirname, 'public')));
