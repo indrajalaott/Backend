@@ -5,10 +5,9 @@ const {userAuth}=require('../middleware/userAuth');
 
 
 
-// register and login routes
-
+// PhonePe Payment Gateway
 router.post('/phonepe',paymentControll.checkout);
-router.post('/phonepayStatus/:txnID',paymentControll.checkStatus)                               
+router.get('/status/:txnID',paymentControll.checkStatus)                               
 
 
 module.exports = router
