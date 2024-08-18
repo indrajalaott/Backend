@@ -7,7 +7,8 @@ const {userAuth}=require('../middleware/userAuth');
 
 // register and login routes
 
-router.post('/phonepe',paymentControll.checkout);                               
+router.post('/phonepe',paymentControll.checkout);
+router.post('/phonepayStatus/:txnID',paymentControll.checkStatus)                               
 
 
 module.exports = router
