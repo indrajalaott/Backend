@@ -8,6 +8,7 @@ const axios = require('axios');
 const CryptoJS = require('crypto-js');
 const Razorpay = require('razorpay');
 const bodyParser = require('body-parser');
+const Payment=require('../models/Payment');
 const express = require('express');
 
 const app = express();
@@ -65,11 +66,32 @@ const checkout = async (req, res) => {
           return res.status(404).json({ message: "User not found." });
       }
 
+
       // Get the user's ID
       const userId = user._id;
 
       // Generate a unique transaction ID
       const transactionId = generateTranscId();
+
+
+
+      const paymentId = await Payment.countDocuments() + 1; // Simple counter for unique id
+
+        const newPayment = new Payment({
+            id: paymentId, // Ensure this is unique
+            name: Name,
+            email: Email,
+            phoneNumber: PhoneNumber,
+            amount: Amount,
+            status: "Initiated",
+            transactionDetails: {
+                transactionId: transactionId,
+                method: 'PAY_PAGE', // Example method, modify as needed
+            },
+        });
+
+        await newPayment.save();
+
 
       // Prepare the payment data
       const data = {
@@ -85,6 +107,8 @@ const checkout = async (req, res) => {
               type: "PAY_PAGE",
           },
       };
+
+
       const payload = JSON.stringify(data);
       const payloadMain = Buffer.from(payload).toString("base64");
 
@@ -94,6 +118,7 @@ const checkout = async (req, res) => {
 
       const sha256 = CryptoJS.SHA256(string).toString();
       const checksum = sha256 + "###" + keyIndex;
+
 
       const prod_URL = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
       const requestData = {
