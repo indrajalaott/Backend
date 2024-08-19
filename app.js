@@ -30,6 +30,7 @@ app.use("/api/pay", Payment);
 // Serve static files
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
+
 // Basic route
 app.get("/", (req, res) => {
     res.send("Hello, Shortfilm Viewers ...");
