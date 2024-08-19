@@ -6,6 +6,38 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 const axios = require('axios');
 const CryptoJS = require('crypto-js');
+const Razorpay = require('razorpay');
+const bodyParser = require('body-parser');
+const express = require('express');
+
+const app = express();
+app.use(bodyParser.json());
+
+const razorpay = new Razorpay({
+  key_id: process.env.KEY_ID_RAZORPAY, 
+  key_secret: process.env.KEY_SECRET_RAZORPAY
+});
+
+const payout = async (req, res) => {
+
+  const { amount } = req.body;
+
+  const options = {
+    amount: amount * 100, // amount in the smallest currency unit (paise)
+    currency: 'INR',
+    receipt: 'receipt#1', // Can be customized
+    notes: {}
+  };
+
+  try {
+    const order = await razorpay.orders.create(options);
+    res.json(order);
+  } catch (error) {
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+}; 
+
+
 
 // Function to generate a unique transaction ID
 function generateTranscId() {
@@ -153,5 +185,6 @@ const checkStatus = async (req, res) => {
 
 module.exports = {
   checkout,   //PhonePe API Call function for Payment CheckOut
-  checkStatus //PhonePe API Status Function 
+  checkStatus, //PhonePe API Status Function 
+  payout        //Razorpe API Call for Payment Checkout
 };
