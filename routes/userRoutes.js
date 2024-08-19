@@ -9,7 +9,9 @@ const {userAuth}=require('../middleware/userAuth');
 
 router.post('/register',userController.register);                                 //Tested
 router.post('/login',userController.login)                                        //Tested 
-router.post('/resetpassword/:id',userAuth,userController.resetPassword)
+
+//Fetch Movie Details
+router.get('/movie/:url', userController.getIndividualMovieDetails);
 
 
 module.exports = router
