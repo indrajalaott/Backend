@@ -10,6 +10,7 @@ const Razorpay = require('razorpay');
 const bodyParser = require('body-parser');
 const Payment=require('../models/Payment');
 const express = require('express');
+const moment = require('moment');
 
 const app = express();
 app.use(bodyParser.json());
@@ -19,24 +20,6 @@ const razorpay = new Razorpay({
   key_secret: process.env.KEY_SECRET_RAZORPAY
 });
 
-const payout = async (req, res) => {
-
-  const { amount } = req.body;
-
-  const options = {
-    amount: amount * 100, // amount in the smallest currency unit (paise)
-    currency: 'INR',
-    receipt: 'receipt#1', // Can be customized
-    notes: {}
-  };
-
-  try {
-    const order = await razorpay.orders.create(options);
-    res.json(order);
-  } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
-  }
-}; 
 
 
 
@@ -187,19 +170,120 @@ const checkStatus = async (req, res) => {
       const response = await axios.request(options);
 
       if (response.data.data.responseCode === 'SUCCESS') {
-          // Handle success case
-          console.log("Payment successful");
-          // You can add further logic here, e.g., saving the status to a database, redirecting, etc.
-          res.status(200).json({ msg: "Payment status success", status: "success", data: response.data });
-      } else {
-          // Handle failure case
-          console.log("Payment failed or pending");
-          // You can add further logic here, e.g., handling failures, etc.
-          res.status(400).json({ msg: "Payment status failed or pending", status: "failed", data: response.data });
-      }
+        try {
+            // Find the payment record by merchantTransactionId and update the status
+            const updatedPayment = await Payment.findOneAndUpdate(
+                { 'transactionDetails.transactionId': merchantTransactionId }, // Adjusted query to match the document structure
+                { status: 'Success' }, // Update the status to 'Success'
+                { new: true } // Return the updated document
+            );
+    
+            if (updatedPayment) {
+                try {
+                    const updatedUser = await updateUserSubscription(merchantTransactionId);
+                    return res.status(200).json({
+                        msg: "Payment status updated successfully and user subscription updated.",
+                        status: "success",
+                        data: {
+                            updatedPayment,
+                            updatedUser,
+                        },
+                    });
+                } catch (error) {
+                    console.error("Error updating user subscription:", error.message);
+                    return res.status(500).json({
+                        msg: "Payment status updated, but error updating user subscription.",
+                        status: "error",
+                        error: error.message,
+                    });
+                }
+            } else {
+                return res.status(404).json({
+                    msg: "Payment record not found.",
+                    status: "error",
+                });
+            }
+        } catch (error) {
+            console.error("Error updating payment record:", error.message);
+            return res.status(500).json({
+                msg: "Error updating payment record.",
+                status: "error",
+                error: error.message,
+            });
+        }
+    } else {
+        // Handle failure or pending case
+        console.log("Payment failed or pending.");
+        return res.status(400).json({ 
+            msg: "Payment status failed or pending.", 
+            status: "failed", 
+            data: response.data 
+        });
+    }
+    
+
+
+
   } catch (error) {
       console.error("Internal Server Error:", error.message);
       res.status(500).json({ msg: "Internal Server Error", status: "error", error: error.message });
+  }
+};
+
+
+const updateUserSubscription = async (merchantTransactionId) => {
+  try {
+      // Fetch the payment record using the merchantTransactionId
+      const paymentRecord = await Payment.findOne({
+          'transactionDetails.transactionId': merchantTransactionId
+      });
+
+      // Check if the payment record exists
+      if (!paymentRecord) {
+          throw new Error("Payment record not found.");
+      }
+
+      // Extract the amount from the payment record
+      const amount = paymentRecord.amount;
+
+      // Determine subscription type and expiry date based on the amount
+      let subscriptionType;
+      let expiryDate;
+
+      if (amount === 1) {
+          subscriptionType = 'Bronze';
+          expiryDate = moment().add(10, 'days').toDate(); // 10 days from today
+      } else if (amount === 599) {
+          subscriptionType = 'Gold';
+          expiryDate = moment().add(30, 'days').toDate(); // 30 days from today
+      } else if (amount === 999) {
+          subscriptionType = 'Platinum';
+          expiryDate = moment().add(60, 'days').toDate(); // 60 days from today
+      } else {
+          throw new Error("Invalid amount for subscription.");
+      }
+
+      // Update the user's subscription type and expiry date
+      const userEmail = paymentRecord.email; // Assuming email is stored in the payment record
+      const updatedUser = await User.findOneAndUpdate(
+                { email: userEmail }, // Find the user by email
+            {
+                    subscriptionType: subscriptionType,
+                    expiryDate: expiryDate
+            },
+           
+);
+
+
+      if (!updatedUser) {
+          throw new Error("User not found.");
+      }
+
+      console.log("User subscription updated successfully:", updatedUser);
+      
+  } catch (error) {
+      console.error("Error updating user subscription:", error.message);
+      throw error; // Rethrow the error for further handling
   }
 };
 
@@ -211,5 +295,5 @@ const checkStatus = async (req, res) => {
 module.exports = {
   checkout,   //PhonePe API Call function for Payment CheckOut
   checkStatus, //PhonePe API Status Function 
-  payout        //Razorpe API Call for Payment Checkout
+  
 };
