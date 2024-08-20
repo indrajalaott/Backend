@@ -119,33 +119,34 @@ const getIndividualMovieDetailsByID = async (req, res) => {
 
 const checkexpValid = async (req, res) => {
     try {
-
-        const SECRET_KEY = process.env.SECRET;
-        // Extract token from the request body
         const { token } = req.body;
 
         if (!token) {
             return res.status(400).json({ message: "Token is required" });
         }
 
-        // Decode the token to get the user ID
-        const decoded = jwt.verify(token, SECRET_KEY);
-        const userId = decoded.id;
+        // Verify and decode the token
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.SECRET);
+        } catch (error) {
+            return res.status(401).json({ message: "Invalid or malformed token", error: error.message });
+        }
 
-        // Find the user by ID
+        const userId = decoded.id;
         const user = await User.findById(userId);
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Return the expiry date from the user model
         return res.status(200).json({ expiryDate: user.expiryDate });
     } catch (error) {
         console.error('Error decoding token or finding user:', error);
-        return res.status(500).json({ message: "Server error" });
+        return res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
 
 
 
