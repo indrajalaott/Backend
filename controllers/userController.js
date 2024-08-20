@@ -110,13 +110,13 @@ const getVideoMovie = async (req, res) => {
         }
 
         // Find the movie by its ID, only returning the movieVideo field
-        const movie = await movies.findOne({ _id: ObjectId(movieId) }, { projection: { movieVideo: 1 } });
+        const movie = await movies.findOne({ _id: new ObjectId(movieId) }, { projection: { movieVideo: 1 } });
 
         // If the movie is not found, return a 404 error
         if (!movie) {
             return res.status(404).json({ error: "Movie not found" });
         }
-        console.log(movie);
+
         // Return the movieVideo in the response with a 200 status code
         res.status(200).json({ movieVideo: movie.movieVideo });
     } catch (error) {
