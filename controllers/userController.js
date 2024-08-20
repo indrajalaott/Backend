@@ -110,7 +110,7 @@ const getVideoMovie = async (req, res) => {
         if (!movie) {
             return res.status(404).json({ error: "Movie not found" });
         }
-
+        console.log(movie);
         // Return the movieVideo in the response with a 200 status code
         res.status(200).json({ movieVideo: movie.movieVideo });
     } catch (error) {
