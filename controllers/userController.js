@@ -94,10 +94,34 @@ const getIndividualMovieDetails = async (req, res) => {
 };
 
 
+
+const getIndividualMovieDetailsByID = async (req, res) => {
+    try {
+        const id = req.params.id; // Extract the URL parameter from the request
+
+        // Find the movie by its URL, excluding the movieVideo and createdAt fields
+        const movie = await Movies.findOne({ _id:id }, '-movieVideo');
+
+        // If the movie is not found, return a 404 error
+        if (!movie) {
+            return res.status(404).json({ error: "Movie not found" });
+        }
+
+        // Return the movie details in the response with a 200 status code
+        res.status(200).json(movie);
+    } catch (error) {
+        console.error("Error fetching movie details:", error.message);
+        // Return a 500 status code if there is a server error
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
 module.exports={
   
   register,
   login,
-  getIndividualMovieDetails
+  getIndividualMovieDetails,
+  getIndividualMovieDetailsByID
   
 }
