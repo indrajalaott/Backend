@@ -13,7 +13,7 @@ router.post('/login',userController.login)                                      
 //Fetch Movie Details
 router.get('/movie/:url', userController.getIndividualMovieDetails);
 router.get('/DeltaFetchMovie/:url', userController.getVideoMovie);
-router.get('/PlayTrailer/:id', userController.getIndividualMovieDetailsByID);
+router.get('/PlayTrailer/:url', userController.getIndividualMovieDetailsByID);
 
 router.post('/checkexp',userController.checkexpValid);
 
