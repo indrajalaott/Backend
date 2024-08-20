@@ -105,9 +105,12 @@ const getVideoMovie = async (req, res) => {
         const movieId = req.params.id; // Extract the ID parameter from the request
 
         // Ensure the movieId is a valid ObjectId
-       
+        if (!ObjectId.isValid(movieId)) {
+            return res.status(400).json({ error: "Invalid movie ID" });
+        }
+
         // Find the movie by its ID, only returning the movieVideo field
-        const movie = await movies.findOne({ _id: ObjectId(_id) }, 'movieVideo');
+        const movie = await movies.findOne({ _id: ObjectId(movieId) }, { projection: { movieVideo: 1 } });
 
         // If the movie is not found, return a 404 error
         if (!movie) {
