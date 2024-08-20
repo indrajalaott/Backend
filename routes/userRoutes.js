@@ -12,7 +12,7 @@ router.post('/login',userController.login)                                      
 
 //Fetch Movie Details
 router.get('/movie/:url', userController.getIndividualMovieDetails);
-router.get('/PlayTrailer/:id', userController.getIndividualMovieDetails);
+router.get('/PlayTrailer/:id', userController.getIndividualMovieDetailsByID);
 
 
 module.exports = router
