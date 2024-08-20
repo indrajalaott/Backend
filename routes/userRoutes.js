@@ -14,5 +14,6 @@ router.post('/login',userController.login)                                      
 router.get('/movie/:url', userController.getIndividualMovieDetails);
 router.get('/PlayTrailer/:id', userController.getIndividualMovieDetailsByID);
 
+router.post('/checkexp',userController.checkexpValid) 
 
 module.exports = router
