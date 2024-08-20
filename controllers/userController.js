@@ -102,10 +102,10 @@ const getIndividualMovieDetails = async (req, res) => {
 
 const getVideoMovie = async (req, res) => {
     try {
-        const id = req.params.id; // Extract the URL parameter from the request
+        const movieUrl = req.params.url; // Extract the URL parameter from the request
 
         // Find the movie by its URL, excluding the movieVideo and createdAt fields
-        const movie = await Movies.findOne({ _id:id });
+        const movie = await Movies.findOne({ url: movieUrl });
 
         // If the movie is not found, return a 404 error
         if (!movie) {
