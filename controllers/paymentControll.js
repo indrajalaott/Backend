@@ -271,12 +271,33 @@ const updateUserSubscription = async (merchantTransactionId) => {
                     subscriptionType: subscriptionType,
                     expiryDate: expiryDate
             },
-           
+
+            { new: true } // This option ensures that the updated document is returned
         );
 
-      if (!updatedUser) {
-          throw new Error("User not found.");
-      }
+        if (updatedUser) {
+            // Sign a JWT token with the user's ID
+            const token = jwt.sign(
+              { userId: updatedUser._id }, // Payload containing the user ID
+              process.env.SECRET, // Secret key
+              { expiresIn: '30d' } // Token expiry time (adjust as needed)
+            );
+          
+            // Return the token and expiry date
+            const url = `https://indrajala.in/?jwt=${token}&exp=${expiryDate}`;
+
+            // Redirect the user to the constructed URL
+            return res.redirect(url);
+
+
+            
+          } else {
+            const url = `https://orders.indrajala.in/`;
+
+                // Redirect the user to the constructed URL
+            return res.redirect(url);
+          }
+          
 
       console.log("User subscription updated successfully:", updatedUser);
       
