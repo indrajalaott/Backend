@@ -250,9 +250,9 @@ const updateUserSubscription = async (merchantTransactionId) => {
       let subscriptionType;
       let expiryDate;
 
-      if (amount === 1) {
+      if (amount === 299) {
           subscriptionType = 'Bronze';
-          expiryDate = moment().add(10, 'days').toDate(); // 10 days from today
+          expiryDate = moment().add(15, 'days').toDate(); // 15 days from today
       } else if (amount === 599) {
           subscriptionType = 'Gold';
           expiryDate = moment().add(30, 'days').toDate(); // 30 days from today
@@ -272,8 +272,7 @@ const updateUserSubscription = async (merchantTransactionId) => {
                     expiryDate: expiryDate
             },
            
-);
-
+        );
 
       if (!updatedUser) {
           throw new Error("User not found.");
