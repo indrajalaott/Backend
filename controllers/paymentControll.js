@@ -250,7 +250,7 @@ const updateUserSubscription = async (merchantTransactionId) => {
       let subscriptionType;
       let expiryDate;
 
-      if (amount === 299) {
+      if (amount === 1) {
           subscriptionType = 'Bronze';
           expiryDate = moment().add(15, 'days').toDate(); // 15 days from today
       } else if (amount === 599) {
@@ -265,15 +265,19 @@ const updateUserSubscription = async (merchantTransactionId) => {
 
       // Update the user's subscription type and expiry date
       const userEmail = paymentRecord.email; // Assuming email is stored in the payment record
+    
       const updatedUser = await User.findOneAndUpdate(
                 { email: userEmail }, // Find the user by email
             {
                     subscriptionType: subscriptionType,
                     expiryDate: expiryDate
             },
+            
 
             { new: true } // This option ensures that the updated document is returned
+            
         );
+        
 
         if (updatedUser) {
             // Sign a JWT token with the user's ID
@@ -284,18 +288,18 @@ const updateUserSubscription = async (merchantTransactionId) => {
             );
           
             // Return the token and expiry date
-            const url = `https://indrajala.in/?jwt=${token}&exp=${expiryDate}`;
+            const url = `https://indrajala.in/?jwt=${token}&exp=${expiryDate.toISOString()}`;
 
             // Redirect the user to the constructed URL
-            return res.redirect(url);
-
+            
+           return url;
 
             
           } else {
             const url = `https://orders.indrajala.in/`;
 
                 // Redirect the user to the constructed URL
-            return res.redirect(url);
+                return url;
           }
           
 
