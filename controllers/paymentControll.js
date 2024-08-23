@@ -180,22 +180,11 @@ const checkStatus = async (req, res) => {
     
             if (updatedPayment) {
                 try {
-                    const updatedUser = await updateUserSubscription(merchantTransactionId);
-                    return res.status(200).json({
-                        msg: "Payment status updated successfully and user subscription updated.",
-                        status: "success",
-                        data: {
-                            updatedPayment,
-                            updatedUser,
-                        },
-                    });
+                    const redirectUrl  = await updateUserSubscription(merchantTransactionId);
+                    res.redirect(redirectUrl );
                 } catch (error) {
-                    console.error("Error updating user subscription:", error.message);
-                    return res.status(500).json({
-                        msg: "Payment status updated, but error updating user subscription.",
-                        status: "error",
-                        error: error.message,
-                    });
+                    console.error("Error processing subscription update:", error.message);
+                        res.redirect('https://orders.indrajala.in/Error'); // Redirect to an error page
                 }
             } else {
                 return res.status(404).json({
@@ -287,19 +276,12 @@ const updateUserSubscription = async (merchantTransactionId) => {
               { expiresIn: '30d' } // Token expiry time (adjust as needed)
             );
           
-            // Return the token and expiry date
-            const url = `https://indrajala.in/?jwt=${token}&exp=${expiryDate.toISOString()}`;
+           // Return the URL with token and expiry date
+            return `https://indrajala.in/?jwt=${token}&exp=${expiryDate.toISOString()}`;
 
-            // Redirect the user to the constructed URL
-            
-           return url;
-
-            
           } else {
-            const url = `https://orders.indrajala.in/`;
-
-                // Redirect the user to the constructed URL
-                return url;
+             // Return the URL for unsuccessful update
+                return 'https://orders.indrajala.in/Broke';
           }
           
 
