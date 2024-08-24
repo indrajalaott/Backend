@@ -277,7 +277,30 @@ const forgot = async (req, res) => {
     }
 };
 
+const resetPassword = async (req, res) => {
+    try {
+        const { token, password } = req.body;
 
+        if (!token || !password) {
+            return res.status(400).json({ message: 'Token and password are required' });
+        }
+
+        // Decrypt the token to get the user ID
+        const decoded = jwt.verify(token, process.env.SECRET);
+        const userId = decoded.id;
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Update the user's password in the database
+        await User.findByIdAndUpdate(userId, { password: hashedPassword });
+
+        return res.status(200).json({ message: 'Password reset successfully' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
 
 
@@ -288,6 +311,7 @@ module.exports={
   getIndividualMovieDetails,
   getIndividualMovieDetailsByID,
   forgot,
+  resetPassword,
 
   checkexpValid,   //check The Validity
   getVideoMovie

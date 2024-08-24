@@ -9,7 +9,8 @@ const {userAuth}=require('../middleware/userAuth');
 
 router.post('/register',userController.register);                                 //Tested
 router.post('/login',userController.login)                                        //Tested 
-router.post('/forgot',userController.forgot)  
+router.post('/forgot',userController.forgot)                                      //Tested
+router.post('/UpdatePass',userController.resetPassword)
 
 //Fetch Movie Details
 router.get('/movie/:url', userController.getIndividualMovieDetails);
