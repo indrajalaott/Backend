@@ -3,6 +3,7 @@ const { Movies } = require("../models/Movies");
 const jwt = require('jsonwebtoken');
 const {User} = require('../models/User');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 
 
 
@@ -181,6 +182,103 @@ const checkexpValid = async (req, res) => {
 };
 
 
+const getUserByEmail = async (email) => {
+    try {
+        // Query the database to find a user by email
+        const user = await User.findOne({ email });
+        
+        // If no user is found, return null
+        if (!user) {
+            return null;
+        }
+
+        // Return the found user
+        return user;
+    } catch (error) {
+        console.error('Error fetching user by email:', error);
+        throw error; // Re-throw the error to be handled by the calling function
+    }
+};
+
+
+
+const forgot = async (req, res) => {
+    const { email } = req.body;
+    
+    try {
+        // Fetch user by email
+        const user = await getUserByEmail(email);
+        
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Generate a JWT token with the user's ID
+        const token = jwt.sign({ id: user.id }, process.env.SECRET, { expiresIn: '10m' });
+        
+        // Create the reset link
+        const resetLink = `https://indrajala.in/reset-password?token=${token}`;
+
+        // Configure Nodemailer
+        const transporter = nodemailer.createTransport({
+            host: process.env.MAIL_HOST,
+            port: process.env.MAIL_PORT,
+            secure: true,
+            auth: {
+                user: process.env.SMAIL,
+                pass: process.env.MAIL_PASSWORD,
+            },
+        });
+
+        // Email content
+        const mailOptions = {
+    from: `"Indrajala Movie Makers" <${process.env.SMAIL}>`,
+    to: email,
+    subject: 'Password Reset Request - Indrajala Movie Makers',
+    html: `
+        <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+            <h2 style="color: #ff6347; text-align: left;">Reset Your Password</h2>
+            <p style="text-align: left; line-height: 1.6;">
+                Hello,
+            </p>
+            <p style="text-align: left; line-height: 1.6;">
+                We received a request to reset your password for your Indrajala Movie Makers account. Please click the button below to proceed with resetting your password.
+            </p>
+            <p style="text-align: left; line-height: 1.6;">
+                <a href="${resetLink}" style="display: inline-block; background-color: #ff6347; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin-top: 20px;">
+                    Reset Password
+                </a>
+            </p>
+            <p style="text-align: left; line-height: 1.6; margin-top: 20px;">
+                <strong>Note:</strong> This link is valid for 10 minutes. If you did not request a password reset, please ignore this email or contact our support team for assistance.
+            </p>
+            <p style="text-align: left; line-height: 1.6; margin-top: 40px;">
+                Thank you,<br/>
+                <strong>The Indrajala Movie Makers Team</strong>
+            </p>
+            <p style="text-align: left; font-size: 12px; color: #999; margin-top: 30px;">
+                Indrajala Movie Makers - OTT Platform for Your Fantasies<br/>
+                If you need further assistance, please visit our <a href="https://policy.indrajala.in" style="color: #ff6347; text-decoration: none;">Support Page</a>.
+            </p>
+        </div>
+    `,
+};
+
+
+        // Send the email
+        await transporter.sendMail(mailOptions);
+
+        // Respond to the user
+        res.status(200).json({ message: 'Password reset link sent successfully.' });
+    } catch (error) {
+        console.error('Error in forgot password process:', error);
+        res.status(500).json({ message: 'An error occurred while processing your request.' });
+    }
+};
+
+
+
 
 
 module.exports={
@@ -189,7 +287,7 @@ module.exports={
   login,
   getIndividualMovieDetails,
   getIndividualMovieDetailsByID,
-
+  forgot,
 
   checkexpValid,   //check The Validity
   getVideoMovie
