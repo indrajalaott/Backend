@@ -83,7 +83,7 @@ const checkout = async (req, res) => {
           merchantUserId: 'MUID' + userId,
           name: Name,
           amount: Amount * 100,
-          redirectUrl: `http://localhost:20000/api/pay/status/${transactionId}`,
+          redirectUrl: `https://api.indrajala.in/api/pay/status/${transactionId}`,
           redirectMode: "GET",
           mobileNumber: PhoneNumber,
           paymentInstrument: {
