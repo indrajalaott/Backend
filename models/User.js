@@ -36,11 +36,11 @@ const userSchema = mongoose.Schema({
     },
     subscriptionType: {
         type: String, // Subscription type
-        default: 'Premium User', // Default subscription type
+        default: 'Free User', // Default subscription type
     },
     expiryDate: {
         type: Date, // Expiry date
-        default: new Date('2024-08-25'), // Default expiry date set to 25th August 2024
+        default: new Date('2024-08-26'), // Default expiry date set to 25th August 2024
     },
     
 });
