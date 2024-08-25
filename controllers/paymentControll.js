@@ -193,21 +193,25 @@ const checkStatus = async (req, res) => {
                 });
             }
         } catch (error) {
-            console.error("Error updating payment record:", error.message);
-            return res.status(500).json({
-                msg: "Error updating payment record.",
-                status: "error",
-                error: error.message,
-            });
+            // console.error("Error updating payment record:", error.message);
+            // return res.status(500).json({
+            //     msg: "Error updating payment record.",
+            //     status: "error",
+            //     error: error.message,
+            // });
+            res.redirect('https://orders.indrajala.in/Error');
         }
     } else {
-        // Handle failure or pending case
-        console.log("Payment failed or pending.");
-        return res.status(400).json({ 
-            msg: "Payment status failed or pending.", 
-            status: "failed", 
-            data: response.data 
-        });
+        // // Handle failure or pending case
+        // console.log("Payment failed or pending.");
+        // return res.status(400).json({ 
+        //     msg: "Payment status failed or pending.", 
+        //     status: "failed", 
+        //     data: response.data 
+        // });
+
+
+        res.redirect('https://orders.indrajala.in/Error');
     }
     
 
