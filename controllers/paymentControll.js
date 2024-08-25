@@ -184,7 +184,7 @@ const checkStatus = async (req, res) => {
                     res.redirect(redirectUrl );
                 } catch (error) {
                     console.error("Error processing subscription update:", error.message);
-                        res.redirect('https://orders.indrajala.in/Error'); // Redirect to an error page
+                        res.redirect('https://orders.indrajala.in/Broke'); // Redirect to an error page
                 }
             } else {
                 return res.status(404).json({
@@ -199,7 +199,7 @@ const checkStatus = async (req, res) => {
             //     status: "error",
             //     error: error.message,
             // });
-            res.redirect('https://orders.indrajala.in/Error');
+            res.redirect('https://orders.indrajala.in/Broke');
         }
     } else {
         // // Handle failure or pending case
@@ -211,7 +211,7 @@ const checkStatus = async (req, res) => {
         // });
 
 
-        res.redirect('https://orders.indrajala.in/Error');
+        res.redirect('https://orders.indrajala.in/Broke');
     }
     
 
