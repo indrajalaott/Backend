@@ -40,7 +40,7 @@ const userSchema = mongoose.Schema({
     },
     expiryDate: {
         type: Date, // Expiry date
-        default: new Date('2024-08-26'), // Default expiry date set to 25th August 2024
+        default: new Date('2024-08-27'), // Default expiry date set to 25th August 2024
     },
     
 });
