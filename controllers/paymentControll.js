@@ -15,6 +15,8 @@ const moment = require('moment');
 const app = express();
 app.use(bodyParser.json());
 
+
+//Create a Instance of Razorpay
 const razorpay = new Razorpay({
   key_id: process.env.KEY_ID_RAZORPAY, 
   key_secret: process.env.KEY_SECRET_RAZORPAY
