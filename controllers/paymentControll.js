@@ -11,6 +11,7 @@ const bodyParser = require('body-parser');
 const Payment=require('../models/Payment');
 const express = require('express');
 const moment = require('moment');
+const crypto=require('crypto');
 
 const app = express();
 app.use(bodyParser.json());
@@ -226,6 +227,182 @@ const checkStatus = async (req, res) => {
 };
 
 
+
+
+// Razor Pay Order Create Wala code -----------------Don't touch above or Below above Phone Pe  ..//
+
+
+const orderCreate = async (req, res) => {
+    const { Name, Email, PhoneNumber, Option } = req.body;
+    let Amount = 3.75;  // Default amount
+
+    if (Option === 1) {
+        Amount = 3.75;
+    } else if (Option === 2) {
+        Amount = 7.5;
+    } else if (Option === 3) {
+        Amount = 11.75;
+    }
+
+    const receiptId = generateTranscId();
+    const user = await User.findOne({ email: Email });
+
+    // If the user does not exist, return an error response
+    if (!user) {
+        return res.status(404).json({ message: "User not found." });
+    }
+
+    // Option that send to Razorpay Payment Gateway Side
+    const options = {
+        amount: Amount * 100,        // Amount in cents
+        currency: "USD",              // Currency is USD
+        receipt: receiptId,           // Unique receipt ID
+    };
+
+    // Saving the Transaction
+    const paymentId = await Payment.countDocuments() + 1; // Simple counter for unique id
+
+    const newPayment = new Payment({
+        id: paymentId, // Ensure this is unique
+        name: Name,
+        email: Email,
+        phoneNumber: PhoneNumber,
+        amount: Amount,
+        status: "Initiated",
+        transactionDetails: {
+            transactionId: receiptId,
+            method: 'RAZOR PAY PAYMENT', // Example method, modify as needed
+        },
+    });
+
+    await newPayment.save();
+
+    try {
+        // Assuming you have initialized Razorpay somewhere in your project
+        const response = await razorpay.orders.create(options);
+
+        // Update the transactionId with the Razorpay order ID
+        await Payment.findOneAndUpdate(
+            { id: paymentId },
+            { 
+                'transactionDetails.transactionId': response.id,
+                status: 'Order Created'
+            }
+        );
+
+        res.status(200).json({
+            message: "Order created successfully",
+            orderId: response.id,
+            amount: Amount,
+            currency: options.currency,
+            receipt: options.receipt
+        });
+    } catch (error) {
+        // If there's an error, update the payment status
+        await Payment.findOneAndUpdate(
+            { id: paymentId },
+            { status: 'Failed' }
+        );
+        res.status(500).json({ error: "Failed to create the order" });
+    }
+};
+
+
+
+
+// Razorpay Payment verify Wala Option
+const verifyPayment = async (req, res) => {
+    const { Order_ID, Payment_ID, Signature } = req.body;
+    const SecretKey = process.env.KEY_SECRET_RAZORPAY;
+
+    // Create a Hash Based Message Auth Code (HMAC)
+    const hmac = crypto.createHmac("sha256", SecretKey);
+    hmac.update(Order_ID + "|" + Payment_ID);
+    const generatedSignature = hmac.digest("hex");
+
+    if (generatedSignature === Signature) {
+        try {
+            // 1. Update Payment status to Success
+            const payment = await Payment.findOneAndUpdate(
+                { 'transactionDetails.transactionId': Order_ID },
+                { 
+                    status: 'Success',
+                    'transactionDetails.paymentId': Payment_ID
+                },
+                { new: true }
+            );
+
+            if (!payment) {
+                return res.status(404).json({ 
+                    success: false,
+                    message: "Payment record not found" 
+                });
+            }
+
+            // 2. Fetch the Email and amount
+            const { email, amount } = payment;
+
+            // Determine subscription type and expiry date
+            let subscriptionType, expiryDate;
+
+            if (amount === 3.75) {
+                subscriptionType = 'Bronze';
+                expiryDate = moment().add(15, 'days').toDate();
+            } else if (amount === 7.5) {
+                subscriptionType = 'Gold';
+                expiryDate = moment().add(30, 'days').toDate();
+            } else if (amount === 11.75) {
+                subscriptionType = 'Platinum';
+                expiryDate = moment().add(60, 'days').toDate();
+            } else {
+                return res.status(400).json({ 
+                    success: false,
+                    message: "Invalid amount for subscription" 
+                });
+            }
+
+            // Update User subscription
+            const updatedUser = await User.findOneAndUpdate(
+                { email: email },
+                {
+                    subscriptionType: subscriptionType,
+                    expiryDate: expiryDate
+                },
+                { new: true }
+            );
+
+            if (!updatedUser) {
+                return res.status(404).json({ 
+                    success: false,
+                    message: "User not found" 
+                });
+            }
+
+            res.status(200).json({ 
+                success: true,
+                message: "Payment verified and user updated successfully" 
+            });
+        } catch (error) {
+            console.error("Error in payment verification:", error);
+            res.status(500).json({ 
+                success: false,
+                message: "Internal server error during payment verification" 
+            });
+        }
+    } else {
+        res.status(400).json({ 
+            success: false,
+            message: "Payment verification failed" 
+        });
+    }
+};
+
+
+
+
+
+
+
 const updateUserSubscription = async (merchantTransactionId) => {
   try {
       // Fetch the payment record using the merchantTransactionId
@@ -245,7 +422,7 @@ const updateUserSubscription = async (merchantTransactionId) => {
       let subscriptionType;
       let expiryDate;
 
-      if (amount === 1) {
+      if (amount === 299) {
           subscriptionType = 'Bronze';
           expiryDate = moment().add(15, 'days').toDate(); // 15 days from today
       } else if (amount === 599) {
@@ -307,5 +484,9 @@ const updateUserSubscription = async (merchantTransactionId) => {
 module.exports = {
   checkout,   //PhonePe API Call function for Payment CheckOut
   checkStatus, //PhonePe API Status Function 
+
+
+  orderCreate,   //Create Order Function - Razorpay
+  verifyPayment     //PhonePe Verifiy Paymement Function Wala code 
   
 };

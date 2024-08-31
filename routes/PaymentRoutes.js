@@ -11,7 +11,7 @@ router.get('/status/:txnID',paymentControll.checkStatus)
 
 
 //RazorPay PaymentGateway
-//router.post('/razorpe',paymentControll.payout);
+router.post('/createOrder',paymentControll.orderCreate);
 
 
 module.exports = router
