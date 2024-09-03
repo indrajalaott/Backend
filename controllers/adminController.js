@@ -218,6 +218,19 @@ const getIndividualMovieDetails = async (req, res) => {
 const getLastThreeMovies = async (req, res) => {
     try {
         const movies = await Movies.find({}, 'movieFullImage description movieName year rating url category movieLogoImage trailerVideo')
+            .sort({ createdAt: -1 });
+
+        res.status(200).json(movies);
+    } catch (error) {
+        console.error("Error fetching latest movies:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
+const getHowerMovieList = async (req, res) => {
+    try {
+        const movies = await Movies.find({}, 'movieFullImage description movieName year rating url category movieLogoImage trailerVideo')
             .sort({ createdAt: -1 })
             .limit(5);
 
@@ -457,7 +470,8 @@ module.exports = {
     videoStreams,
     movieDetails,
     getIndividualMovieDetails,
-    getLastThreeMovies
+    getLastThreeMovies,
+    getHowerMovieList
 
 
 

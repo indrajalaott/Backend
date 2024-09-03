@@ -58,9 +58,12 @@ router.get('/Individual-MovieDetails/:url', adminController.getIndividualMovieDe
 //Latest Movies Fetching
 router.get('/Corrosil-Desktop', adminController.getLastThreeMovies);
 
+// Movies Fetching Reverse Order
+router.get('/Corrosil-Desktop', adminController.getLastThreeMovies);
 
-// GET route to list all movies
-router.get('/movies', adminAuth, adminController.fetchAllMovies); 
+
+// GET route to list Latest 3 Movies
+router.get('/movies', adminAuth, adminController.getHowerMovieList); 
 
 
 // Route to fetch individual movie by ID
