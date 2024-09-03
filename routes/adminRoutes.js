@@ -59,7 +59,7 @@ router.get('/Individual-MovieDetails/:url', adminController.getIndividualMovieDe
 router.get('/Corrosil-Desktop', adminController.getLastThreeMovies);
 
 // Movies Fetching Reverse Order
-router.get('/Corrosil-Desktop', adminController.getLastThreeMovies);
+router.get('/CorrosilListMovies', adminController.getLastThreeMovies);
 
 
 // GET route to list Latest 3 Movies
