@@ -37,11 +37,19 @@ function generateTranscId() {
 const checkout = async (req, res) => {
   try {
       // Destructuring the required fields from the request body
-      const { Name, Email, PhoneNumber, Amount } = req.body;
+      const { Token, PhoneNumber,OrderId } = req.body;
 
       // Validate the input data
-      if (!Name || !Email || !PhoneNumber || !Amount) {
-          return res.status(400).json({ message: "All fields are required." });
+      if ( !PhoneNumber ) {
+          return res.status(400).json({ message: "Please Submit Phone Number." });
+      }
+
+      const decoded = jwt.verify(Token, process.env.SECRET); // Replace 'process.env.SECRET' with your JWT secret key
+      const { Name, Email } = decoded;
+
+      // Validate the decoded data
+      if (!Name || !Email) {
+          return res.status(400).json({ message: "Invalid token: Name and Email are required." });
       }
 
       // Find the user by email
@@ -58,6 +66,21 @@ const checkout = async (req, res) => {
 
       // Generate a unique transaction ID
       const transactionId = generateTranscId();
+
+      let Amount;
+      switch (OrderId) {
+          case 1:
+              Amount = 299;
+              break;
+          case 2:
+              Amount = 599;
+              break;
+          case 3:
+              Amount = 999;
+              break;
+          default:
+              Amount = 299;
+      }
 
 
 
