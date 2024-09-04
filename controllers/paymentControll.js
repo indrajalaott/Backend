@@ -45,25 +45,26 @@ const checkout = async (req, res) => {
       }
 
       const decoded = jwt.verify(Token, process.env.SECRET); // Replace 'process.env.SECRET' with your JWT secret key
-      const { Name, Email } = decoded;
 
-      // Validate the decoded data
-      if (!Name || !Email) {
-          return res.status(400).json({ message: "Invalid token: Name and Email are required." });
-      }
+      const { userId } = decoded;
 
-      // Find the user by email
-      const user = await User.findOne({ email: Email });
+      // Find the user by userId
+      const user = await User.findById(userId);
+      
 
       // If the user does not exist, return an error response
       if (!user) {
           return res.status(404).json({ message: "User not found." });
       }
-      console.log(Name);
 
+   
+      // Extract name and email from the user record
+      const { name, email } = user;
 
-      // Get the user's ID
-      const userId = user._id;
+      // Set values to Name and Email variables
+      const Name = name;
+      const Email = email;
+    
 
       // Generate a unique transaction ID
       const transactionId = generateTranscId();
@@ -83,7 +84,7 @@ const checkout = async (req, res) => {
               Amount = 299;
       }
 
-
+      
 
       const paymentId = await Payment.countDocuments() + 1; // Simple counter for unique id
 
