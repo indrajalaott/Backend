@@ -59,6 +59,7 @@ const checkout = async (req, res) => {
       if (!user) {
           return res.status(404).json({ message: "User not found." });
       }
+      console.log(Name);
 
 
       // Get the user's ID
