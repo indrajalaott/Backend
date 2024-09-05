@@ -279,7 +279,7 @@ const orderCreate = async (req, res) => {
 
     // Option that send to Razorpay Payment Gateway Side
     const options = {
-        amountFinal: Amount * 1000,        // Amount in cents
+        amountFinal: Amount * 100,        // Amount in cents
         currency: "USD",              // Currency is USD
         receipt: receiptId,           // Unique receipt ID
     };
