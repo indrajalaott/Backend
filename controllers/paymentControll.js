@@ -377,13 +377,13 @@ const verifyPayment = async (req, res) => {
             // Determine subscription type and expiry date
             let subscriptionType, expiryDate;
 
-            if (amount === 3.75) {
+            if (amount === 4) {
                 subscriptionType = 'Bronze';
                 expiryDate = moment().add(15, 'days').toDate();
-            } else if (amount === 7.5) {
+            } else if (amount === 8) {
                 subscriptionType = 'Gold';
                 expiryDate = moment().add(30, 'days').toDate();
-            } else if (amount === 11.75) {
+            } else if (amount === 12) {
                 subscriptionType = 'Platinum';
                 expiryDate = moment().add(60, 'days').toDate();
             } else {
