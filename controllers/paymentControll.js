@@ -258,15 +258,15 @@ const checkStatus = async (req, res) => {
 
 const orderCreate = async (req, res) => {
     const { Name, Email, PhoneNumber, Option } = req.body;
-    let Amount = 299;  // Default amount
+    let Amount = 400;  // Default amount
 
     // Adjust the amount based on the selected Option
     if (Option === 1) {
-        Amount = 299;
+        Amount = 400;
     } else if (Option === 2) {
-        Amount = 8;
+        Amount = 800;
     } else if (Option === 3) {
-        Amount = 12;
+        Amount = 1200;
     }
 
     const receiptId = generateTranscId();
@@ -280,7 +280,7 @@ const orderCreate = async (req, res) => {
     // Options sent to Razorpay for order creation
     const options = {
         amount: Amount * 100,  // Amount in the smallest currency unit (paise for INR, cents for USD)
-        currency: "INR",       // Ensure the currency matches your Razorpay account settings
+        currency: "USD",       // Ensure the currency matches your Razorpay account settings
         receipt: receiptId,    // Unique receipt ID
     };
 
