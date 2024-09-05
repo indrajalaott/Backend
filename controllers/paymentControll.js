@@ -316,7 +316,7 @@ const orderCreate = async (req, res) => {
         );
 
         // Respond with the order details
-        console.log(response);
+        
         res.status(200).json({
             message: "Order created successfully",
             orderId: response.id,
@@ -333,7 +333,7 @@ const orderCreate = async (req, res) => {
 
         console.error('Razorpay order creation error:', error);
         if (error.statusCode === 401) {
-            console.log(error);
+            console.log(razorpayInstance);
             res.status(401).json({ error: "Authentication failed. Please check your API keys." });
         } else {
             res.status(500).json({ error: "Failed to create the order." });
