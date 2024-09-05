@@ -314,7 +314,7 @@ const orderCreate = async (req, res) => {
                 status: 'Order Created'
             }
         );
-
+        console.log(response);
         res.status(200).json({
             message: "Order created successfully",
             orderId: response.id,
@@ -328,7 +328,7 @@ const orderCreate = async (req, res) => {
             { id: paymentId },
             { status: 'Failed' }
         );
-        res.status(500).json({ error: "Failed to create the order" });
+        res.status(500).json({ error: "Failed to create the order"});
     }
 };
 
