@@ -18,9 +18,9 @@ app.use(bodyParser.json());
 
 
 //Create a Instance of Razorpay
-const razorpay = new Razorpay({
-  key_id: process.env.KEY_ID_RAZORPAY, 
-  key_secret: process.env.KEY_SECRET_RAZORPAY
+const razorpayInstance = new Razorpay({
+  key_id: process.env.RAZORPAYID, 
+  key_secret: process.env.RAZORPAYSEC
 });
 
 
@@ -256,11 +256,11 @@ const checkStatus = async (req, res) => {
 
 // Razor Pay Order Create Wala code -----------------Don't touch above or Below above Phone Pe  ..//
 
-
 const orderCreate = async (req, res) => {
     const { Name, Email, PhoneNumber, Option } = req.body;
     let Amount = 3.75;  // Default amount
 
+    // Adjust the amount based on the selected Option
     if (Option === 1) {
         Amount = 3.75;
     } else if (Option === 2) {
@@ -277,11 +277,11 @@ const orderCreate = async (req, res) => {
         return res.status(404).json({ message: "User not found." });
     }
 
-    // Option that send to Razorpay Payment Gateway Side
+    // Options sent to Razorpay for order creation
     const options = {
-        amountFinal: Amount * 100,        // Amount in cents
-        currency: "USD",              // Currency is USD
-        receipt: receiptId,           // Unique receipt ID
+        amount: Amount * 100,  // Amount in the smallest currency unit (paise for INR, cents for USD)
+        currency: "USD",       // Ensure the currency matches your Razorpay account settings
+        receipt: receiptId,    // Unique receipt ID
     };
 
     // Saving the Transaction
@@ -303,8 +303,8 @@ const orderCreate = async (req, res) => {
     await newPayment.save();
 
     try {
-        // Assuming you have initialized Razorpay somewhere in your project
-        const response = await razorpay.orders.create(options);
+        // Create an order using Razorpay API
+        const response = await razorpayInstance.orders.create(options);
 
         // Update the transactionId with the Razorpay order ID
         await Payment.findOneAndUpdate(
@@ -314,6 +314,8 @@ const orderCreate = async (req, res) => {
                 status: 'Order Created'
             }
         );
+
+        // Respond with the order details
         console.log(response);
         res.status(200).json({
             message: "Order created successfully",
@@ -328,17 +330,22 @@ const orderCreate = async (req, res) => {
             { id: paymentId },
             { status: 'Failed' }
         );
-        res.status(500).json({ error: "Failed to create the order"});
+
+        console.error('Razorpay order creation error:', error);
+        if (error.statusCode === 401) {
+            console.log(error);
+            res.status(401).json({ error: "Authentication failed. Please check your API keys." });
+        } else {
+            res.status(500).json({ error: "Failed to create the order." });
+        }
     }
 };
 
-
-
-
 // Razorpay Payment verify Wala Option
+
 const verifyPayment = async (req, res) => {
     const { Order_ID, Payment_ID, Signature } = req.body;
-    const SecretKey = process.env.KEY_SECRET_RAZORPAY;
+    const SecretKey = process.env.RAZORPAYSEC;
 
     // Create a Hash Based Message Auth Code (HMAC)
     const hmac = crypto.createHmac("sha256", SecretKey);
