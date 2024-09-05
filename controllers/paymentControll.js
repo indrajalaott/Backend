@@ -262,11 +262,11 @@ const orderCreate = async (req, res) => {
 
     // Adjust the amount based on the selected Option
     if (Option === 1) {
-        Amount = 3.75;
+        Amount = 4;
     } else if (Option === 2) {
-        Amount = 7.5;
+        Amount = 8;
     } else if (Option === 3) {
-        Amount = 11.75;
+        Amount = 12;
     }
 
     const receiptId = generateTranscId();
