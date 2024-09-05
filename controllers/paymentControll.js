@@ -258,15 +258,15 @@ const checkStatus = async (req, res) => {
 
 const orderCreate = async (req, res) => {
     const { Name, Email, PhoneNumber, Option } = req.body;
-    let Amount = 400;  // Default amount
+    let Amount = 375;  // Default amount
 
     // Adjust the amount based on the selected Option
     if (Option === 1) {
-        Amount = 400;
+        Amount = 375;
     } else if (Option === 2) {
-        Amount = 800;
+        Amount = 750;
     } else if (Option === 3) {
-        Amount = 1200;
+        Amount = 1175;
     }
 
     const receiptId = generateTranscId();
@@ -377,13 +377,13 @@ const verifyPayment = async (req, res) => {
             // Determine subscription type and expiry date
             let subscriptionType, expiryDate;
 
-            if (amount === 4) {
+            if (amount === 375) {
                 subscriptionType = 'Bronze';
                 expiryDate = moment().add(15, 'days').toDate();
-            } else if (amount === 8) {
+            } else if (amount === 750) {
                 subscriptionType = 'Gold';
                 expiryDate = moment().add(30, 'days').toDate();
-            } else if (amount === 12) {
+            } else if (amount === 1175) {
                 subscriptionType = 'Platinum';
                 expiryDate = moment().add(60, 'days').toDate();
             } else {
