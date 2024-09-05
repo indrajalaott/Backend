@@ -258,7 +258,7 @@ const checkStatus = async (req, res) => {
 
 const orderCreate = async (req, res) => {
     const { Name, Email, PhoneNumber, Option } = req.body;
-    let Amount = 3.75;  // Default amount
+    let Amount = 4;  // Default amount
 
     // Adjust the amount based on the selected Option
     if (Option === 1) {
