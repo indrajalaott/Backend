@@ -101,6 +101,50 @@ const getIndividualMovieDetails = async (req, res) => {
     }
 };
 
+const profileDataBack = async (req, res) => {
+    
+
+        try {
+          // Get the token from the request body
+          const { token } = req.body;
+
+    
+          
+          if (!token) {
+            return res.status(400).json({ message: 'Token is required' });
+          }
+      
+          // Decode the token to extract the user ID
+          const decoded = jwt.verify(token, process.env.SECRET);
+          const userId = decoded.userId;
+    
+          // Find the user in the database using the user ID
+          const user = await User.findById(userId);
+
+         
+          
+          if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+          }
+      
+           // Select only the required fields to return
+            const { name, email, subscriptionType, expiryDate } = user;
+
+            // Return the selected user data with a 200 status code
+            return res.status(200).json({ 
+                name, 
+                email, 
+                subscriptionType, 
+                expiryDate 
+            });
+          
+        } catch (error) {
+          console.error('Error decoding token or fetching user:', error);
+          return res.status(500).json({ message: 'Internal server error' });
+        }
+     
+};
+
 
 
 
@@ -167,7 +211,7 @@ const checkexpValid = async (req, res) => {
             return res.status(401).json({ message: "Invalid or malformed token", error: error.message });
         }
 
-        const userId = decoded.id;
+        const userId = decoded.userId;
         const user = await User.findById(userId);
 
         if (!user) {
@@ -314,6 +358,9 @@ module.exports={
   resetPassword,
 
   checkexpValid,   //check The Validity
-  getVideoMovie
+  getVideoMovie,
+
+
+  profileDataBack
   
 }
