@@ -217,7 +217,7 @@ const getIndividualMovieDetails = async (req, res) => {
 // The Corrosil Section Goes from Here. Now Only 3 Will be Listed if need Increase the count
 const getLastThreeMovies = async (req, res) => {
     try {
-        const movies = await Movies.find({}, 'movieFullImage description movieName year rating url category movieLogoImage trailerVideo')
+        const movies = await Movies.find({}, 'movieFullImage description movieName year rating url category movieLogoImage smallMovieImage movieMobileImage')
             .sort({ createdAt: -1 });
 
         res.status(200).json(movies);
