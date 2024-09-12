@@ -55,8 +55,29 @@ router.get('/videos/:id', adminController.videoStreams)
 // Route to Fetch the Individual Details of the Movie where the URL of Movie is passed
 router.get('/Individual-MovieDetails/:url', adminController.getIndividualMovieDetails);
 
+//---------- Movie Fetch Start Here --------------------//
+
 //Latest Movies Fetching
 router.get('/Corrosil-Desktop', adminController.getLastThreeMovies);
+
+
+//Latest Movies Fetching
+router.get('/toptrending', adminController.getLastThreeMovies);
+
+
+//Latest Movies Fetching
+router.get('/topfive', adminController.getLastThreeMovies);
+
+
+//Latest Movies Fetching
+router.get('/mostviewed', adminController.getLastThreeMovies);
+
+//Latest Movies Fetching
+router.get('/upcomming', adminController.getLastThreeMovies);
+
+
+//  -------------------Movie Fetch End Here ---------------------------------//
+
 
 // Movies Fetching Reverse Order
 router.get('/CorrosilListMovies', adminController.getLastThreeMovies);
