@@ -6,7 +6,7 @@ const multer = require("multer");
 
 // Set multer limits to accept larger files
 const uploadLimits = {
-    fileSize: 1024 * 1024 * 1024 * 20 // Set limit to 20 GB (adjust as needed)
+    fileSize: 1024 * 1024 * 1024 * 1200 // Set limit to 1200 GB (adjust as needed)
 };
 
 // Image storage configurations
