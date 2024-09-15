@@ -20,7 +20,7 @@ app.use(cors({
 }));
 
 // Set limit for JSON body size
-app.use(express.json({ limit: '2gb' })); // Set limit to 2 GB
+app.use(express.json({ limit: '200gb' })); // Set limit to 2 GB
 
 // Define routes
 app.use("/api/admin", admin);
