@@ -218,7 +218,8 @@ const getIndividualMovieDetails = async (req, res) => {
 const getLastThreeMovies = async (req, res) => {
     try {
         const movies = await Movies.find({}, 'movieFullImage description movieName year rating url category movieLogoImage smallMovieImage movieMobileImage')
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .limit(1);
 
         res.status(200).json(movies);
     } catch (error) {
