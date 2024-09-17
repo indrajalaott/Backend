@@ -77,9 +77,12 @@ const checkout = async (req, res) => {
               Amount = 299;
               break;
           case 2:
-              Amount = 599;
+              Amount = 399;
               break;
           case 3:
+              Amount = 599;
+              break;
+          case 4:
               Amount = 999;
               break;
           default:
@@ -458,14 +461,18 @@ const updateUserSubscription = async (merchantTransactionId) => {
       let expiryDate;
 
       if (amount === 299) {
-          subscriptionType = 'Bronze';
+          subscriptionType = 'Baisc';
           expiryDate = moment().add(15, 'days').toDate(); // 15 days from today
-      } else if (amount === 599) {
-          subscriptionType = 'Gold';
-          expiryDate = moment().add(30, 'days').toDate(); // 30 days from today
+      } else if (amount === 399) {
+        subscriptionType = 'Gold';
+        expiryDate = moment().add(30, 'days').toDate(); // 30 days from today
+        }
+      else if (amount === 599) {
+          subscriptionType = 'Standard';
+          expiryDate = moment().add(60, 'days').toDate(); // 30 days from today
       } else if (amount === 999) {
           subscriptionType = 'Platinum';
-          expiryDate = moment().add(60, 'days').toDate(); // 60 days from today
+          expiryDate = moment().add(90, 'days').toDate(); // 60 days from today
       } else {
           throw new Error("Invalid amount for subscription.");
       }
