@@ -269,9 +269,13 @@ const orderCreate = async (req, res) => {
     console.log("Hello"+Option);
     if (Option === 1) {
         Amount = 375;
-    } else if (Option === 2) {
+    }
+    else if (Option === 2) {
+        Amount = 500;
+    } 
+    else if (Option === 3) {
         Amount = 750;
-    } else if (Option === 3) {
+    } else if (Option === 4) {
         Amount = 1175;
     }
 
@@ -384,14 +388,21 @@ const verifyPayment = async (req, res) => {
             let subscriptionType, expiryDate;
 
             if (amount === 375) {
-                subscriptionType = 'Bronze';
+                subscriptionType = 'Basic';
                 expiryDate = moment().add(15, 'days').toDate();
-            } else if (amount === 750) {
+            }
+            else if (amount === 500) {
                 subscriptionType = 'Gold';
                 expiryDate = moment().add(30, 'days').toDate();
+            }
+            
+            else if (amount === 750) {
+                subscriptionType = 'Standard';
+                expiryDate = moment().add(60, 'days').toDate();
+
             } else if (amount === 1175) {
                 subscriptionType = 'Platinum';
-                expiryDate = moment().add(60, 'days').toDate();
+                expiryDate = moment().add(90, 'days').toDate();
             } else {
                 return res.status(400).json({ 
                     success: false,
