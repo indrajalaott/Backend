@@ -68,8 +68,9 @@ const checkout = async (req, res) => {
 
       // Generate a unique transaction ID
       const transactionId = generateTranscId();
-      
+
       let Amount;
+      console.log(OrderId);
       switch (OrderId) {
           case 1:
               Amount = 299;
