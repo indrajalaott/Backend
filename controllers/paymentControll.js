@@ -80,8 +80,7 @@ const checkout = async (req, res) => {
           case 3:
               Amount = 999;
               break;
-          default:
-              Amount = 299;
+
       }
 
       
