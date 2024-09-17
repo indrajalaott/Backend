@@ -263,7 +263,7 @@ const orderCreate = async (req, res) => {
     let Amount = 375;  // Default amount
 
     // Adjust the amount based on the selected Option
-    console.log(PhoneNumber);
+    console.log("Hello"+Option);
     if (Option === 1) {
         Amount = 375;
     } else if (Option === 2) {
