@@ -38,6 +38,7 @@ const checkout = async (req, res) => {
   try {
       // Destructuring the required fields from the request body
       const { Token, PhoneNumber,OrderId } = req.body;
+      console.log(OrderId);
 
       // Validate the input data
       if ( !PhoneNumber ) {
@@ -70,7 +71,7 @@ const checkout = async (req, res) => {
       const transactionId = generateTranscId();
 
       let Amount;
-      console.log(OrderId);
+      
       switch (OrderId) {
           case 1:
               Amount = 299;
