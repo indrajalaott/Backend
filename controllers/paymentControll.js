@@ -44,7 +44,7 @@ const checkout = async (req, res) => {
       if ( !PhoneNumber ) {
           return res.status(400).json({ message: "Please Submit Phone Number." });
       }
-
+      console.log(PhoneNumber);
       const decoded = jwt.verify(Token, process.env.SECRET); // Replace 'process.env.SECRET' with your JWT secret key
 
       const { userId } = decoded;
