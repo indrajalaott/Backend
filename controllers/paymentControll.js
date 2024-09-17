@@ -38,7 +38,7 @@ const checkout = async (req, res) => {
   try {
       // Destructuring the required fields from the request body
       const { Token, PhoneNumber,OrderId } = req.body;
-      console.log(OrderId);
+      
 
       // Validate the input data
       if ( !PhoneNumber ) {
