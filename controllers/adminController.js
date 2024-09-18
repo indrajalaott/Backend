@@ -229,6 +229,22 @@ const getLastThreeMovies = async (req, res) => {
 };
 
 
+const returnHover = async (req, res) => {
+    try {
+        const movies = await Movies.find({}, 'movieFullImage description movieName year rating url category movieLogoImage smallMovieImage movieMobileImage')
+                    .sort({ createdAt: -1 })
+                    .limit(1);  // Limit the result to 1 movie
+
+            
+
+        res.status(200).json(movies);
+    } catch (error) {
+        console.error("Error fetching latest movies:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
 const getHowerMovieList = async (req, res) => {
     try {
         const movies = await Movies.find({}, 'movieFullImage description movieName year rating url category movieLogoImage trailerVideo')
@@ -472,7 +488,10 @@ module.exports = {
     movieDetails,
     getIndividualMovieDetails,
     getLastThreeMovies,
-    getHowerMovieList
+    getHowerMovieList,
+
+
+    returnHover
 
 
 

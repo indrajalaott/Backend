@@ -58,7 +58,7 @@ router.get('/Individual-MovieDetails/:url', adminController.getIndividualMovieDe
 //---------- Movie Fetch Start Here --------------------//
 
 //Latest Movies Fetching
-router.get('/Corrosil-Desktop', adminController.getLastThreeMovies);
+router.get('/Corrosil-Desktop', adminController.returnHover);
 
 
 //Latest Movies Fetching
