@@ -360,20 +360,20 @@ const orderCreate = async (req, res) => {
 
 const newuser = async (req, res) => {
     const { Name, Email, PhoneNumber, Option } = req.body;
-    let Amount = 299;  // Default amount
+    let Amount = 29999;  // Default amount
 
     // Adjust the amount based on the selected Option
   
     if (Option === 1) {
-        Amount = 2999;
+        Amount = 29999;
     }
     else if (Option === 2) {
-        Amount = 3999;
+        Amount = 39999;
     } 
     else if (Option === 3) {
-        Amount = 5999;
+        Amount = 59999;
     } else if (Option === 4) {
-        Amount = 9999;
+        Amount = 99999;
     }
 
     const receiptId = generateTranscId();
