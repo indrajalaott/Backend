@@ -593,20 +593,20 @@ const checkPay = async (req, res) => {
             // Determine subscription type and expiry date
             let subscriptionType, expiryDate;
 
-            if (amount === 299) {
+            if (amount === 29900) {
                 subscriptionType = 'Basic';
                 expiryDate = moment().add(15, 'days').toDate();
             }
-            else if (amount === 399) {
+            else if (amount === 39900) {
                 subscriptionType = 'Gold';
                 expiryDate = moment().add(30, 'days').toDate();
             }
             
-            else if (amount === 599) {
+            else if (amount === 59900) {
                 subscriptionType = 'Standard';
                 expiryDate = moment().add(60, 'days').toDate();
 
-            } else if (amount === 999) {
+            } else if (amount === 99900) {
                 subscriptionType = 'Platinum';
                 expiryDate = moment().add(90, 'days').toDate();
             } else {
