@@ -266,7 +266,7 @@ const orderCreate = async (req, res) => {
     let Amount = 375;  // Default amount
 
     // Adjust the amount based on the selected Option
-    console.log("Hello"+Option);
+   
     if (Option === 1) {
         Amount = 375;
     }
@@ -351,7 +351,115 @@ const orderCreate = async (req, res) => {
     }
 };
 
-// Razorpay Payment verify Wala Option
+
+
+
+
+
+// Razor Pay Order Create Wala code For Indian Users.//
+
+const newuser = async (req, res) => {
+    const { Name, Email, PhoneNumber, Option } = req.body;
+    let Amount = 299;  // Default amount
+
+    // Adjust the amount based on the selected Option
+  
+    if (Option === 1) {
+        Amount = 299;
+    }
+    else if (Option === 2) {
+        Amount = 399;
+    } 
+    else if (Option === 3) {
+        Amount = 599;
+    } else if (Option === 4) {
+        Amount = 999;
+    }
+
+    const receiptId = generateTranscId();
+    const user = await User.findOne({ email: Email });
+
+    // If the user does not exist, return an error response
+    if (!user) {
+        return res.status(404).json({ message: "User not found." });
+    }
+
+    // Options sent to Razorpay for order creation
+    const options = {
+        amount: Amount * 100,  // Amount in the smallest currency unit (paise for INR, cents for USD)
+        currency: "INR",       // Ensure the currency matches your Razorpay account settings
+        receipt: receiptId,    // Unique receipt ID
+    };
+
+    // Saving the Transaction
+    const paymentId = await Payment.countDocuments() + 1; // Simple counter for unique id
+
+    const newPayment = new Payment({
+        id: paymentId, // Ensure this is unique
+        name: Name,
+        email: Email,
+        phoneNumber: PhoneNumber,
+        amount: Amount,
+        status: "Initiated",
+        transactionDetails: {
+            transactionId: receiptId,
+            method: 'RAZOR PAY PAYMENT', // Example method, modify as needed
+        },
+    });
+
+    await newPayment.save();
+
+    try {
+        // Create an order using Razorpay API
+        const response = await razorpayInstance.orders.create(options);
+
+        // Update the transactionId with the Razorpay order ID
+        await Payment.findOneAndUpdate(
+            { id: paymentId },
+            { 
+                'transactionDetails.transactionId': response.id,
+                status: 'Order Created'
+            }
+        );
+
+        // Respond with the order details
+        
+        res.status(200).json({
+            message: "Order created successfully",
+            orderId: response.id,
+            amount: Amount,
+            currency: options.currency,
+            receipt: options.receipt
+        });
+    } catch (error) {
+        // If there's an error, update the payment status
+        await Payment.findOneAndUpdate(
+            { id: paymentId },
+            { status: 'Failed' }
+        );
+
+        console.error('Razorpay order creation error:', error);
+        if (error.statusCode === 401) {
+            console.log(razorpayInstance);
+            res.status(401).json({ error: "Authentication failed. Please check your API keys." });
+        } else {
+            res.status(500).json({ error: "Failed to create the order." });
+        }
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+// Razorpay Payment verify Wala Option For Non Indian
 
 const verifyPayment = async (req, res) => {
     const { Order_ID, Payment_ID, Signature } = req.body;
@@ -449,6 +557,101 @@ const verifyPayment = async (req, res) => {
 
 
 
+// Razorpay Payment verify Wala Option For  Indian
+
+const checkPay = async (req, res) => {
+    const { Order_ID, Payment_ID, Signature } = req.body;
+    const SecretKey = process.env.RAZORPAYSEC;
+
+    // Create a Hash Based Message Auth Code (HMAC)
+    const hmac = crypto.createHmac("sha256", SecretKey);
+    hmac.update(Order_ID + "|" + Payment_ID);
+    const generatedSignature = hmac.digest("hex");
+
+    if (generatedSignature === Signature) {
+        try {
+            // 1. Update Payment status to Success
+            const payment = await Payment.findOneAndUpdate(
+                { 'transactionDetails.transactionId': Order_ID },
+                { 
+                    status: 'Success',
+                    'transactionDetails.paymentId': Payment_ID
+                },
+                { new: true }
+            );
+
+            if (!payment) {
+                return res.status(404).json({ 
+                    success: false,
+                    message: "Payment record not found" 
+                });
+            }
+
+            // 2. Fetch the Email and amount
+            const { email, amount } = payment;
+
+            // Determine subscription type and expiry date
+            let subscriptionType, expiryDate;
+
+            if (amount === 299) {
+                subscriptionType = 'Basic';
+                expiryDate = moment().add(15, 'days').toDate();
+            }
+            else if (amount === 399) {
+                subscriptionType = 'Gold';
+                expiryDate = moment().add(30, 'days').toDate();
+            }
+            
+            else if (amount === 599) {
+                subscriptionType = 'Standard';
+                expiryDate = moment().add(60, 'days').toDate();
+
+            } else if (amount === 999) {
+                subscriptionType = 'Platinum';
+                expiryDate = moment().add(90, 'days').toDate();
+            } else {
+                return res.status(400).json({ 
+                    success: false,
+                    message: "Invalid amount for subscription" 
+                });
+            }
+
+            // Update User subscription
+            const updatedUser = await User.findOneAndUpdate(
+                { email: email },
+                {
+                    subscriptionType: subscriptionType,
+                    expiryDate: expiryDate
+                },
+                { new: true }
+            );
+
+            if (!updatedUser) {
+                return res.status(404).json({ 
+                    success: false,
+                    message: "User not found" 
+                });
+            }
+
+            res.status(200).json({ 
+                success: true,
+                message: "Payment verified and user updated successfully" 
+            });
+        } catch (error) {
+            console.error("Error in payment verification:", error);
+            res.status(500).json({ 
+                success: false,
+                message: "Internal server error during payment verification" 
+            });
+        }
+    } else {
+        res.status(400).json({ 
+            success: false,
+            message: "Payment verification failed" 
+        });
+    }
+};
+
 
 
 
@@ -539,7 +742,12 @@ module.exports = {
   checkStatus, //PhonePe API Status Function 
 
 
-  orderCreate,   //Create Order Function - Razorpay
-  verifyPayment     //PhonePe Verifiy Paymement Function Wala code 
+  orderCreate,   //Create Order Function - Razorpay  - Non Indian
+  verifyPayment,     //PhonePe Verifiy Paymement Function Wala code 
+
+
+
+  newuser,  //Create Order Function - Razorpay  - Indian
+  checkPay  //PhonePe Verifiy Paymement Function Wala code 
   
 };

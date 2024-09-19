@@ -10,9 +10,13 @@ router.post('/phonepe',paymentControll.checkout);
 router.get('/status/:txnID',paymentControll.checkStatus)   
 
 
-//RazorPay PaymentGateway
+//RazorPay PaymentGateway International
 router.post('/createOrder',paymentControll.orderCreate);
 router.post('/verifyPayment',paymentControll.verifyPayment);
+
+//Razorpay Payment Gatway Indian
+router.post('/newuser',paymentControll.newuser);
+router.post('/checkstatus',paymentControll.checkPay);
 
 
 module.exports = router
