@@ -365,15 +365,15 @@ const newuser = async (req, res) => {
     // Adjust the amount based on the selected Option
   
     if (Option === 1) {
-        Amount = 299;
+        Amount = 2999;
     }
     else if (Option === 2) {
-        Amount = 399;
+        Amount = 3999;
     } 
     else if (Option === 3) {
-        Amount = 599;
+        Amount = 5999;
     } else if (Option === 4) {
-        Amount = 999;
+        Amount = 9999;
     }
 
     const receiptId = generateTranscId();
@@ -386,7 +386,7 @@ const newuser = async (req, res) => {
 
     // Options sent to Razorpay for order creation
     const options = {
-        amount: Amount * 1000,  // Amount in the smallest currency unit (paise for INR, cents for USD)
+        amount: Amount * 100,  // Amount in the smallest currency unit (paise for INR, cents for USD)
         currency: "INR",       // Ensure the currency matches your Razorpay account settings
         receipt: receiptId,    // Unique receipt ID
     };
