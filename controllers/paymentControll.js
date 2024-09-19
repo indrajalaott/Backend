@@ -386,7 +386,7 @@ const newuser = async (req, res) => {
 
     // Options sent to Razorpay for order creation
     const options = {
-        amount: Amount * 100,  // Amount in the smallest currency unit (paise for INR, cents for USD)
+        amount: Amount * 1000,  // Amount in the smallest currency unit (paise for INR, cents for USD)
         currency: "INR",       // Ensure the currency matches your Razorpay account settings
         receipt: receiptId,    // Unique receipt ID
     };
