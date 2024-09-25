@@ -218,22 +218,22 @@ const checkexpValid = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-            const today = new Date();
-            const expiryDate = new Date(user.expiryDate);
+        const today = new Date();
+        const expiryDate = new Date(user.expiryDate);
+        
+        // Reset the time portion for both dates to compare only the day
+        today.setHours(0, 0, 0, 0);
+        expiryDate.setHours(0, 0, 0, 0);
+        
+        // Check if the expiry date is today or in the future
+        const isValid = expiryDate.getTime() >= today.getTime(); // true if today or any upcoming date
+        
+        console.log(isValid);
+        
+        return res.status(200).json({ isValid });
+        
 
-            // Reset the time portion for both dates to compare only the day
-            today.setHours(0, 0, 0, 0);
-            expiryDate.setHours(0, 0, 0, 0);
-
-            // Calculate the difference in days
-            const diffTime = expiryDate.getTime() - today.getTime();
-            const diffDays = diffTime / (1000 * 3600 * 24); // Difference in days
-
-            const isValid = diffDays === 0 || diffDays === 1; // true if today or the day after
-
-            console.log(isValid);
-
-            return res.status(200).json({ isValid });
+        return res.status(200).json({ isValid });
 
 
 
