@@ -231,6 +231,8 @@ const checkexpValid = async (req, res) => {
 
             const isValid = diffDays === 0 || diffDays === 1; // true if today or the day after
 
+            console.log(user);
+
             return res.status(200).json({ isValid });
 
 
