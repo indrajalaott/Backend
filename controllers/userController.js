@@ -228,10 +228,6 @@ const checkexpValid = async (req, res) => {
         // Check if the expiry date is today or in the future
         const isValid = expiryDate.getTime() >= today.getTime(); // true if today or any upcoming date
         
-        console.log(isValid);
-        
-        return res.status(200).json({ isValid });
-        
 
         return res.status(200).json({ isValid });
 
