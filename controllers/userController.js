@@ -218,7 +218,23 @@ const checkexpValid = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        return res.status(200).json({ expiryDate: user.expiryDate });
+            const today = new Date();
+            const expiryDate = new Date(user.expiryDate);
+
+            // Reset the time portion for both dates to compare only the day
+            today.setHours(0, 0, 0, 0);
+            expiryDate.setHours(0, 0, 0, 0);
+
+            // Calculate the difference in days
+            const diffTime = expiryDate.getTime() - today.getTime();
+            const diffDays = diffTime / (1000 * 3600 * 24); // Difference in days
+
+            const isValid = diffDays === 0 || diffDays === 1; // true if today or the day after
+
+            return res.status(200).json({ isValid });
+
+
+
     } catch (error) {
         console.error('Error decoding token or finding user:', error);
         return res.status(500).json({ message: "Server error", error: error.message });
