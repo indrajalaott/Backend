@@ -7,6 +7,7 @@ const jwtsecret = process.env.JWT_ADMIN_SECRET;
 const { Movies } = require('../models/Movies');
 const { Carousels } = require('../models/Carousels');
 const Admin = require('../models/Admin');
+const {User} = require('../models/User');
 const Recommendation = require('../models/Recommendation');
 
 const adminLogin = async (req, res) => {
