@@ -492,6 +492,7 @@ const searchUserByMail = async (req, res) => {
             email: user.email,
             subscriptionType: user.subscriptionType,
             expiryDate: user.expiryDate,
+            phoneNumber: user.phonenumber, // Return the updated phone number
         });
     } catch (error) {
         console.error(error);
