@@ -499,6 +499,76 @@ const searchUserByMail = async (req, res) => {
 
 
 
+const updateUserPlan = async (req, res) => {
+    try {
+        const { email, selection } = req.body; // Extract email and selection from request body
+
+        // Check if email and selection are provided
+        if (!email || !selection) {
+            return res.status(400).json({ message: "Email and selection are required" });
+        }
+
+        // Calculate the expiry date based on the selection
+        let expiryDays;
+        let subscriptionType;
+
+        switch (selection) {
+            case 'A':
+                subscriptionType = 'Basic User';
+                expiryDays = 15;
+                break;
+            case 'B':
+                subscriptionType = 'Golden User';
+                expiryDays = 30;
+                break;
+            case 'C':
+                subscriptionType = 'Standard User';
+                expiryDays = 60;
+                break;
+            case 'D':
+                subscriptionType = 'Premium User';
+                expiryDays = 90;
+                break;
+            default:
+                return res.status(400).json({ message: "Invalid selection" });
+        }
+
+        // Calculate the new expiry date
+        const newExpiryDate = new Date();
+        newExpiryDate.setDate(newExpiryDate.getDate() + expiryDays);
+
+        // Update the user's subscription type and expiry date
+        const updatedUser = await User.findOneAndUpdate(
+            { email }, 
+            { 
+                subscriptionType,
+                expiryDate: newExpiryDate 
+            },
+            { new: true } // To return the updated document
+        );
+
+        // If user not found, return a 404 response
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Respond with the updated user details
+        return res.status(200).json({
+            message: "User plan updated successfully",
+            subscriptionType: updatedUser.subscriptionType,
+            expiryDate: updatedUser.expiryDate
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+module.exports = { updateUserPlan };
+;
+
+
 
 module.exports = {
     adminLogin,
@@ -526,6 +596,7 @@ module.exports = {
 
     // Admin User Management Routes is Been Send From Here
     searchUserByMail,
+    updateUserPlan,
 
 
     returnHover
