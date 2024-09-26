@@ -575,14 +575,25 @@ const updateUserPlan = async (req, res) => {
 
 const searchUserByPhoneNo = async (req, res) => {
     try {
-        const { email } = req.body; // Extract email from request body
-        
-        // Check if email is provided
-        if (!email) {
-            return res.status(400).json({ message: "Email is required" });
+        const { phoneNumber } = req.body; // Extract phone number and new phone number from the request body
+
+        // Check if phone number is provided
+        if (!phoneNumber) {
+            return res.status(400).json({ message: "Phone number is required" });
         }
 
-        // Search for the user by email
+        // Find the latest payment record by phone number (sorted by most recent date)
+        const lastPayment = await Payment.findOne({ phoneNumber }).sort({ date: -1 });
+
+        // If payment not found, return a 404 response
+        if (!lastPayment) {
+            return res.status(404).json({ message: "No payment record found for this phone number" });
+        }
+
+        // Get the user's email from the last payment record
+        const { email } = lastPayment;
+
+        // Find the user by email from the User model
         const user = await User.findOne({ email });
 
         // If user not found, return a 404 response
@@ -590,19 +601,27 @@ const searchUserByPhoneNo = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Respond with the user's details (excluding sensitive info like password)
+        // Update the payment status to "Success" for the last payment record
+        lastPayment.status = "Success";
+        await lastPayment.save(); // Save the updated payment record
+
+        // Update the user's phone number with the  phone number From Payment Record
+        user.phonenumber = phoneNumber;
+        await user.save(); // Save the updated user record
+
+        // Respond with the user's details and confirmation of the updates
         return res.status(200).json({
             name: user.name,
             email: user.email,
             subscriptionType: user.subscriptionType,
             expiryDate: user.expiryDate,
+            phoneNumber: user.phonenumber, // Return the updated phone number
         });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error" });
     }
 };
-
 
 
 
