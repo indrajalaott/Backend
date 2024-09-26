@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+const nodemailer = require('nodemailer');
 const jwtsecret = process.env.JWT_ADMIN_SECRET;
 const { Movies } = require('../models/Movies');
 const { Carousels } = require('../models/Carousels');
@@ -552,6 +553,9 @@ const updateUserPlan = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
+        // Send email notification about the plan update
+        await sendPlanUpdateMail(email, subscriptionType, newExpiryDate);
+
         // Respond with the updated user details
         return res.status(200).json({
             message: "User plan updated successfully",
@@ -565,8 +569,59 @@ const updateUserPlan = async (req, res) => {
     }
 };
 
-module.exports = { updateUserPlan };
-;
+const sendPlanUpdateMail = async (email, subscriptionType, expiryDate) => {
+    try {
+        // Create the Nodemailer transporter
+        const transporter = nodemailer.createTransport({
+            host: process.env.MAIL_HOST,
+            port: process.env.MAIL_PORT,
+            secure: true, // For SSL
+            auth: {
+                user: process.env.SMAIL,
+                pass: process.env.MAIL_PASSWORD,
+            },
+        });
+
+        // Email content
+        const mailOptions = {
+            from: `"Indrajala Movie Makers" <${process.env.SMAIL}>`,
+            to: email,
+            subject: 'Your Account Plan Has Been Updated',
+            html: `
+                <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                    <h2 style="color: #ff6347; text-align: left;">Account Plan Updated</h2>
+                    <p style="text-align: left; line-height: 1.6;">
+                        Hello,
+                    </p>
+                    <p style="text-align: left; line-height: 1.6;">
+                        We are happy to inform you that your Indrajala Movie Makers account plan has been updated successfully. Below are the details of your updated subscription plan:
+                    </p>
+                    <p style="text-align: left; line-height: 1.6;">
+                        <strong>Subscription Type:</strong> ${subscriptionType}<br/>
+                        <strong>Expiry Date:</strong> ${expiryDate.toDateString()}
+                    </p>
+                    <p style="text-align: left; line-height: 1.6;">
+                        If you did not make this request, please contact our support team immediately.
+                    </p>
+                    <p style="text-align: left; line-height: 1.6; margin-top: 40px;">
+                        Thank you,<br/>
+                        <strong>The Indrajala Movie Makers Team</strong>
+                    </p>
+                    <p style="text-align: left; font-size: 12px; color: #999; margin-top: 30px;">
+                        Indrajala Movie Makers - OTT Platform for Your Fantasies<br/>
+                        If you need further assistance, please visit our <a href="https://policy.indrajala.in" style="color: #ff6347; text-decoration: none;">Support Page</a>.
+                    </p>
+                </div>
+            `,
+        };
+
+        // Send the email
+        await transporter.sendMail(mailOptions);
+        
+    } catch (error) {
+        console.error('Error sending plan update email:', error);
+    }
+};
 
 
 
