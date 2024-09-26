@@ -489,7 +489,6 @@ const searchUserByMail = async (req, res) => {
         return res.status(200).json({
             name: user.name,
             email: user.email,
-            likedList: user.likedList,
             subscriptionType: user.subscriptionType,
             expiryDate: user.expiryDate,
         });
