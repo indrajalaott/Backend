@@ -110,4 +110,13 @@ router.post('/fetch-movie-detailss', adminAuth, adminController.fetchMovieDetail
 
 
 
+
+
+
+// Routes Related to User Management  - SL0 B3 AN90 -  IV Done by SREEJESH 
+
+
+router.post('/searchUser', adminAuth, cpUpload, adminController.searchUserByMail);
+
+
 module.exports = router;
