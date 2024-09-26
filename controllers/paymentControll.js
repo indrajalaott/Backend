@@ -560,12 +560,12 @@ const verifyPayment = async (req, res) => {
 // Razorpay Payment verify Wala Option For  Indian
 
 const checkPay = async (req, res) => {
-    const { Order_ID, Payment_ID, Signature } = req.body;
+    const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body;
     const SecretKey = process.env.RAZORPAYSEC;
 
     // Create a Hash Based Message Auth Code (HMAC)
     const hmac = crypto.createHmac("sha256", SecretKey);
-    hmac.update(Order_ID + "|" + Payment_ID);
+    hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
     const generatedSignature = hmac.digest("hex");
 
     if (generatedSignature === Signature) {
@@ -593,20 +593,20 @@ const checkPay = async (req, res) => {
             // Determine subscription type and expiry date
             let subscriptionType, expiryDate;
 
-            if (amount === 29900) {
+            if (amount === 299) {
                 subscriptionType = 'Basic';
                 expiryDate = moment().add(15, 'days').toDate();
             }
-            else if (amount === 39900) {
+            else if (amount === 399) {
                 subscriptionType = 'Gold';
                 expiryDate = moment().add(30, 'days').toDate();
             }
             
-            else if (amount === 59900) {
+            else if (amount === 599) {
                 subscriptionType = 'Standard';
                 expiryDate = moment().add(60, 'days').toDate();
 
-            } else if (amount === 99900) {
+            } else if (amount === 999) {
                 subscriptionType = 'Platinum';
                 expiryDate = moment().add(90, 'days').toDate();
             } else {
