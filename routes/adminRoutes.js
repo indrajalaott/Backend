@@ -118,5 +118,6 @@ router.post('/fetch-movie-detailss', adminAuth, adminController.fetchMovieDetail
 
 router.post('/searchUser', adminAuth, adminController.searchUserByMail);
 router.post('/upDateUser', adminAuth, adminController.updateUserPlan);
+router.post('/searchUserByPhone', adminAuth, adminController.searchUserByPhoneNo);
 
 module.exports = router;

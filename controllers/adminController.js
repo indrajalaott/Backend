@@ -7,6 +7,7 @@ const jwtsecret = process.env.JWT_ADMIN_SECRET;
 const { Movies } = require('../models/Movies');
 const { Carousels } = require('../models/Carousels');
 const Admin = require('../models/Admin');
+const Payment=require('../models/Payment');
 const {User} = require('../models/User');
 const Recommendation = require('../models/Recommendation');
 
@@ -569,6 +570,45 @@ const updateUserPlan = async (req, res) => {
     }
 };
 
+
+
+
+const searchUserByPhoneNo = async (req, res) => {
+    try {
+        const { email } = req.body; // Extract email from request body
+        
+        // Check if email is provided
+        if (!email) {
+            return res.status(400).json({ message: "Email is required" });
+        }
+
+        // Search for the user by email
+        const user = await User.findOne({ email });
+
+        // If user not found, return a 404 response
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Respond with the user's details (excluding sensitive info like password)
+        return res.status(200).json({
+            name: user.name,
+            email: user.email,
+            subscriptionType: user.subscriptionType,
+            expiryDate: user.expiryDate,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+
+
+
+
+
+
 const sendPlanUpdateMail = async (email, subscriptionType, expiryDate) => {
     try {
         // Create the Nodemailer transporter
@@ -652,6 +692,7 @@ module.exports = {
     // Admin User Management Routes is Been Send From Here
     searchUserByMail,
     updateUserPlan,
+    searchUserByPhoneNo,
 
 
     returnHover
