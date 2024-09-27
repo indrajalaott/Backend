@@ -16,7 +16,7 @@ router.post('/verifyPayment',paymentControll.verifyPayment);
 
 //Razorpay Payment Gatway Indian
 router.post('/newuser',paymentControll.newuser);
-router.post('/checkstatus',paymentControll.checkPay);
+router.post('/checkstatus',express.text(),paymentControll.checkPay);
 
 
 module.exports = router

@@ -563,22 +563,24 @@ const verifyPayment = async (req, res) => {
 const checkPay = async (req, res) => {
     
 
+            // Extract raw text from req.body (as it is in 'text/plain')
+            const rawText = req.body;
 
-    // Extract raw text from req.body (as it is in 'text/plain')
-    const rawText = req.body;
+            // Parse the text as if it's a query string
+            const params = new URLSearchParams(rawText);
 
-    // Parse the text as if it's a query string
-    const params = new URLSearchParams(rawText);
+            // Extract values from the parsed query string
+            const razorpay_payment_id = params.get('razorpay_payment_id');
+            const razorpay_order_id = params.get('razorpay_order_id');
+            const razorpay_signature = params.get('razorpay_signature');
 
-    // Extract values from the parsed query string
-    const razorpay_payment_id = params.get('razorpay_payment_id');
-    const razorpay_order_id = params.get('razorpay_order_id');
-    const razorpay_signature = params.get('razorpay_signature');
-
-    // Check if all necessary parameters are present
-    if (!razorpay_payment_id || !razorpay_order_id || !razorpay_signature) {
-        console.log(razorpay_payment_id);
-    }
+            // Check if all necessary parameters are present
+            if (!razorpay_payment_id || !razorpay_order_id || !razorpay_signature) {
+                return res.status(400).json({ 
+                    success: false,
+                    message: "Missing required parameters" 
+                });
+            }
 
 
 
