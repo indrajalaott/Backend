@@ -577,10 +577,7 @@ const checkPay = async (req, res) => {
 
     // Check if all necessary parameters are present
     if (!razorpay_payment_id || !razorpay_order_id || !razorpay_signature) {
-        return res.status(400).json({ 
-            success: false,
-            message: "Missing required parameters" 
-        });
+        console.log(razorpay_payment_id);
     }
 
 
