@@ -576,7 +576,7 @@ const checkPay = async (req, res) => {
                 { 'transactionDetails.transactionId': razorpay_order_id },
                 { 
                     status: 'Success',
-                    'transactionDetails.paymentId': razorpay_payment_id
+                    'transactionDetails.paymentId': razorpay_order_id
                 },
                 { new: true }
             );
