@@ -634,9 +634,14 @@ const checkPay = async (req, res) => {
                 });
             }
 
+
+            // 4. Send Plan Update Email to the User
+            await sendPlanUpdateMail(email, subscriptionType, expiryDate);
+
+
             res.status(200).json({ 
                 success: true,
-                message: "Payment verified and user updated successfully" 
+                message: "Payment verified, user updated, and email sent successfully" 
             });
         } catch (error) {
             console.error("Error in payment verification:", error);
