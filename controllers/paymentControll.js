@@ -639,6 +639,7 @@ const checkPay = async (req, res) => {
             await sendPlanUpdateMail(email, subscriptionType, expiryDate);
 
 
+            res.redirect('https://indrajala.in/Home');
             res.status(200).json({ 
                 success: true,
                 message: "Payment verified, user updated, and email sent successfully" 
