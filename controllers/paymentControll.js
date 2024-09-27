@@ -573,10 +573,10 @@ const checkPay = async (req, res) => {
         try {
             // 1. Update Payment status to Success
             const payment = await Payment.findOneAndUpdate(
-                { 'transactionDetails.transactionId': Order_ID },
+                { 'transactionDetails.transactionId': razorpay_order_id },
                 { 
                     status: 'Success',
-                    'transactionDetails.paymentId': Payment_ID
+                    'transactionDetails.paymentId': razorpay_payment_id
                 },
                 { new: true }
             );
