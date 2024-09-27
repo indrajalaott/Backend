@@ -640,22 +640,26 @@ const checkPay = async (req, res) => {
 
 
             res.redirect('https://indrajala.in/Home');
-            res.status(200).json({ 
-                success: true,
-                message: "Payment verified, user updated, and email sent successfully" 
-            });
+            // res.status(200).json({ 
+            //     success: true,
+            //     message: "Payment verified, user updated, and email sent successfully" 
+            // });
         } catch (error) {
             console.error("Error in payment verification:", error);
-            res.status(500).json({ 
-                success: false,
-                message: "Internal server error during payment verification" 
-            });
+            res.redirect('https://indrajala.in/Broke');
+
+            // res.status(500).json({ 
+            //     success: false,
+            //     message: "Internal server error during payment verification" 
+            // });
         }
     } else {
-        res.status(400).json({ 
-            success: false,
-            message: "Payment verification failed" 
-        });
+        res.redirect('https://indrajala.in/Broke');
+
+        // res.status(400).json({ 
+        //     success: false,
+        //     message: "Payment verification failed" 
+        // });
     }
 };
 
