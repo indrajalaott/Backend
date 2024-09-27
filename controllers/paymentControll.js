@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 const axios = require('axios');
 const CryptoJS = require('crypto-js');
+const { sendPlanUpdateMail } = require('./adminController');
 const Razorpay = require('razorpay');
 const bodyParser = require('body-parser');
 const Payment=require('../models/Payment');
