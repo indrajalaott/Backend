@@ -639,7 +639,8 @@ const checkPay = async (req, res) => {
             await sendPlanUpdateMail(email, subscriptionType, expiryDate);
 
 
-           
+            redirectBasedOnCondition(true);  // Redirects to Home
+
             res.status(200).json({ 
                 success: true,
                 message: "Payment verified, user updated, and email sent successfully" 
@@ -647,6 +648,8 @@ const checkPay = async (req, res) => {
         } catch (error) {
             console.error("Error in payment verification:", error);
           
+            redirectBasedOnCondition(false); // Redirects to Broke
+
             res.status(500).json({ 
                 success: false,
                 message: "Internal server error during payment verification" 
@@ -654,6 +657,7 @@ const checkPay = async (req, res) => {
         }
     } else {
      
+        redirectBasedOnCondition(false); // Redirects to Broke
 
         res.status(400).json({ 
             success: false,
@@ -743,6 +747,13 @@ const updateUserSubscription = async (merchantTransactionId) => {
 };
 
 
+function redirectBasedOnCondition(isSuccessful) {
+    if (isSuccessful) {
+        window.location.href = "https://indrajala.in/Home";
+    } else {
+        window.location.href = "https://indrajala.in/Broke";
+    }
+}
 
 
 
