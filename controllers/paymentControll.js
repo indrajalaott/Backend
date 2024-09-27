@@ -749,9 +749,11 @@ const updateUserSubscription = async (merchantTransactionId) => {
 
 function redirectBasedOnCondition(isSuccessful) {
     if (isSuccessful) {
-        window.location.href = "https://indrajala.in/Home";
+        // Redirect to Home
+        res.redirect('https://indrajala.in/Home');
     } else {
-        window.location.href = "https://indrajala.in/Broke";
+        // Redirect to Broke
+        res.redirect('https://indrajala.in/Broke');
     }
 }
 
