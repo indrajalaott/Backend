@@ -709,6 +709,9 @@ module.exports = {
     getHowerMovieList,
 
 
+    sendPlanUpdateMail, //Send Mail Function Update
+
+
     // Admin User Management Routes is Been Send From Here
     searchUserByMail,
     updateUserPlan,
