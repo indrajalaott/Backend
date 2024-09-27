@@ -642,6 +642,7 @@ const checkPay = async (req, res) => {
       
               // Redirect the user to https://indrajala.in/Home
             res.redirect('https://indrajala.in/Home');
+            return;
 
             // res.status(200).json({ 
             //     success: true,
@@ -652,6 +653,7 @@ const checkPay = async (req, res) => {
           
            
             res.redirect('https://indrajala.in/Broke');
+            return;
             // res.status(500).json({ 
             //     success: false,
             //     message: "Internal server error during payment verification" 
@@ -661,6 +663,7 @@ const checkPay = async (req, res) => {
      
         
         res.redirect('https://indrajala.in/Broke');
+        return;
         // res.status(400).json({ 
         //     success: false,
         //     message: "Payment verification failed" 
