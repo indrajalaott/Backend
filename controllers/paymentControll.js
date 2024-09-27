@@ -568,7 +568,7 @@ const checkPay = async (req, res) => {
     hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
     const generatedSignature = hmac.digest("hex");
 
-    if (generatedSignature === razorpay_signature) {
+    if (generatedSignature === razorpay_signature   ) {
         try {
             // 1. Update Payment status to Success
             const payment = await Payment.findOneAndUpdate(
