@@ -566,7 +566,7 @@ const checkPay = async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
     const SecretKey = process.env.RAZORPAYSEC;
    
-    console.log(req.body);
+    
     // Create a Hash Based Message Auth Code (HMAC)
     const hmac = crypto.createHmac("sha256", SecretKey);
     hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
@@ -594,6 +594,7 @@ const checkPay = async (req, res) => {
 
             // 2. Fetch the Email and amount
             const { email, amount } = payment;
+            console.log(payment);
 
             // Determine subscription type and expiry date
             let subscriptionType, expiryDate;
