@@ -14,7 +14,7 @@ const app = express();
 const port = process.env.PORT || 20000;
 
 app.use(cors({
-  origin: "*",
+  origin: "https://indrajala.in", // Set this to the exact domain
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Specify the allowed methods
   credentials: true // Allow credentials if needed
 }));
