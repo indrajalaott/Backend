@@ -561,6 +561,8 @@ const verifyPayment = async (req, res) => {
 // Razorpay Payment verify Wala Option For  Indian
 
 const checkPay = async (req, res) => {
+
+    console.log(req.body);
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
     const SecretKey = process.env.RAZORPAYSEC;
 
