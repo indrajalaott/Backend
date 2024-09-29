@@ -594,7 +594,6 @@ const checkPay = async (req, res) => {
 
             // 2. Fetch the Email and amount
             const { email, amount } = payment;
-            console.log(payment);
 
             // Determine subscription type and expiry date
             let subscriptionType, expiryDate;
@@ -631,6 +630,7 @@ const checkPay = async (req, res) => {
                 },
                 { new: true }
             );
+            console.log(updatedUser);
 
             if (!updatedUser) {
                 return res.status(404).json({ 
