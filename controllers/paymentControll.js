@@ -630,7 +630,7 @@ const checkPay = async (req, res) => {
                 },
                 { new: true }
             );
-            console.log(updatedUser);
+            
 
             if (!updatedUser) {
                 return res.status(404).json({ 
