@@ -562,17 +562,26 @@ const verifyPayment = async (req, res) => {
 
 const checkPay = async (req, res) => {
 
-    console.log(req);
+    
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
     const SecretKey = process.env.RAZORPAYSEC;
+    console.log("Here");
+    console.log(razorpay_order_id);
+    console.log("Here");
+    console.log(razorpay_payment_id);
+    console.log("Here");
+    console.log(razorpay_signature);
+    console.log("Body");
+    console.log(req.body);
 
     // Create a Hash Based Message Auth Code (HMAC)
     const hmac = crypto.createHmac("sha256", SecretKey);
     hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
     const generatedSignature = hmac.digest("hex");
-
+    
     if (generatedSignature === razorpay_signature   ) {
         try {
+            console.log("Here");
             // 1. Update Payment status to Success
             const payment = await Payment.findOneAndUpdate(
                 { 'transactionDetails.transactionId': razorpay_order_id },
@@ -618,7 +627,7 @@ const checkPay = async (req, res) => {
                     message: "Invalid amount for subscription" 
                 });
             }
-
+            console.log("Here2");
             // Update User subscription
             const updatedUser = await User.findOneAndUpdate(
                 { email: email },
