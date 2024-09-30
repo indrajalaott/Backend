@@ -33,7 +33,7 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Basic route
 app.get("/", (req, res) => {
-    res.send("Hello, Shortfilm Viewers ...");
+    res.send("Congratulations ! You Find a Easter Egg");
 });
 
 // Start the server
