@@ -62,8 +62,7 @@ const login = async (req, res) => {
             const token = jwt.sign({ userId: user._id }, process.env.SECRET, { expiresIn: '30d' })
              // Respond with the token and expiryDate
         res.status(200).json({ 
-            token, 
-            expiryDate: user.expiryDate 
+            token
         });
         } else {
             console.log("not found");
