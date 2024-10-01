@@ -536,6 +536,8 @@ const verifyPayment = async (req, res) => {
                 });
             }
 
+            await sendPlanUpdateMail(email, subscriptionType, expiryDate);
+
             res.status(200).json({ 
                 success: true,
                 message: "Payment verified and user updated successfully" 
