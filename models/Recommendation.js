@@ -50,8 +50,6 @@ const recommendationSchema = new mongoose.Schema({
     },
 });
 
-// Drop the unique constraint on categoryName if it still exists
-recommendationSchema.index({ categoryName: 1 }, { unique: false });
 
 const Recommendation = mongoose.model('Recommendation', recommendationSchema);
 

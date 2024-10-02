@@ -250,7 +250,7 @@ const getAllMovies = async (req, res) => {
 
 const addToRecomendationList = async (req, res) => {
     try {
-        const {movieID,cat} =req.body;
+        const { movieID, cat } = req.body;
 
         // Determine the category based on 'cat'
         let categoryName;
@@ -262,16 +262,25 @@ const addToRecomendationList = async (req, res) => {
             categoryName = 'topfivemovies'; // Default category if 'cat' is not 1 or 2
         }
 
-
         // Find the Movie that need to be added to the category
         const movie = await Movies.findById(movieID);
         if (!movie) {
             return res.status(404).json({ error: "Movie not found" });
         }
 
-        // Create a new recommendation with movie details and category "topfivemovies"
+        // Check if a recommendation with the same categoryName and movieName already exists
+        const existingRecommendation = await Recommendation.findOne({
+            categoryName: categoryName,
+            movieName: movie.movieName
+        });
+
+        if (existingRecommendation) {
+            return res.status(409).json({ error: "Movie already exists in this category" });
+        }
+
+        // Create a new recommendation with movie details and category
         const newRecommendation = new Recommendation({
-            categoryName: categoryName, // Use the dynamically determined category
+            categoryName: categoryName,
             movieName: movie.movieName,
             year: movie.year,
             rating: movie.rating,
@@ -287,16 +296,14 @@ const addToRecomendationList = async (req, res) => {
             smallMovieImage: movie.smallMovieImage
         });
 
-        console.log(newRecommendation);
         // Save the recommendation
         await newRecommendation.save();
 
-        //Movie Added 
+        // Movie Added 
         res.status(201).json({ message: "Movie added to Top Five Movies successfully", newRecommendation });
 
-        }  catch (error) {
-
-         // Error Handlin  - Error could be possible due to database error or some kind of CORS Error   
+    } catch (error) {
+        // Error Handling 
         console.error("Error Adding Movie to Top Five movies:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
     }
