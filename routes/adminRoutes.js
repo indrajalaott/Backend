@@ -61,11 +61,11 @@ router.get('/Individual-MovieDetails/:url', adminController.getIndividualMovieDe
 router.get('/Corrosil-Desktop', adminController.returnHover);
 
 
-//Latest Movies Fetching
+//Trending Movies Fetching
 router.get('/toptrending', adminController.getLastThreeMovies);
 
 
-//Latest Movies Fetching
+//Top 5 Movies Fetching
 router.get('/topfive', adminController.getLastThreeMovies);
 
 
