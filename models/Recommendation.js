@@ -50,6 +50,9 @@ const recommendationSchema = new mongoose.Schema({
     },
 });
 
+// Add a compound unique index
+recommendationSchema.index({ categoryName: 1, movieName: 1 }, { unique: true });
+
 
 const Recommendation = mongoose.model('Recommendation', recommendationSchema);
 
