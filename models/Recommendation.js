@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const recommendationSchema = mongoose.Schema({
     categoryName: {
         type: String,
-        required: true,
      
     },
     movieName: {
