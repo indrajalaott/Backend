@@ -253,7 +253,7 @@ const addToRecomendationList = async (req, res) => {
         const { movieID, cat } = req.body;
 
         // Determine the category based on 'cat'
-        let categoryName;
+        let categoryName=topfivemovies;
         if (cat === 1) {
             categoryName = 'topfivemovies';
         } else if (cat === 2) {
@@ -268,15 +268,7 @@ const addToRecomendationList = async (req, res) => {
             return res.status(404).json({ error: "Movie not found" });
         }
 
-        // Check if a recommendation with the same categoryName and movieName already exists
-        const existingRecommendation = await Recommendation.findOne({
-            categoryName: categoryName,
-            movieName: movie.movieName
-        });
-
-        if (existingRecommendation) {
-            return res.status(409).json({ error: "Movie already exists in this category" });
-        }
+        
 
         // Create a new recommendation with movie details and category
         const newRecommendation = new Recommendation({
