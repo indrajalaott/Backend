@@ -4,7 +4,7 @@ const recommendationSchema = mongoose.Schema({
     categoryName: {
         type: String,
         required: true,
-        unique: true
+     
     },
     movieName: {
         type: String,
