@@ -1,12 +1,14 @@
 const mongoose = require("mongoose");
 
-const recommendationSchema = mongoose.Schema({
+const recommendationSchema = new mongoose.Schema({
     categoryName: {
         type: String,
-     
+        required: true,  // Ensure categoryName is not null and is required
+        index: true      // Keep this indexed, but without the unique constraint
     },
     movieName: {
         type: String,
+        required: true,  // Ensure movieName is required
     },
     year: {
         type: Number,
@@ -47,6 +49,9 @@ const recommendationSchema = mongoose.Schema({
         type: String,
     },
 });
+
+// Drop the unique constraint on categoryName if it still exists
+recommendationSchema.index({ categoryName: 1 }, { unique: false });
 
 const Recommendation = mongoose.model('Recommendation', recommendationSchema);
 
