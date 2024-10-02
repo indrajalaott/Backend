@@ -287,6 +287,7 @@ const addToRecomendationList = async (req, res) => {
             smallMovieImage: movie.smallMovieImage
         });
 
+        console.log(newRecommendation);
         // Save the recommendation
         await newRecommendation.save();
 
