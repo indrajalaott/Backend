@@ -248,6 +248,60 @@ const getAllMovies = async (req, res) => {
 
 
 
+const addToRecomendationList = async (req, res) => {
+    try {
+        const {movieID,cat} =req.body;
+
+        // Determine the category based on 'cat'
+        let categoryName;
+        if (cat === 1) {
+            categoryName = 'topfivemovies';
+        } else if (cat === 2) {
+            categoryName = 'toptrendingmovies';
+        } else {
+            categoryName = 'topfivemovies'; // Default category if 'cat' is not 1 or 2
+        }
+
+
+        // Find the Movie that need to be added to the category
+        const movie = await Movies.findById(movieID);
+        if (!movie) {
+            return res.status(404).json({ error: "Movie not found" });
+        }
+
+        // Create a new recommendation with movie details and category "topfivemovies"
+        const newRecommendation = new Recommendation({
+            categoryName: categoryName, // Use the dynamically determined category
+            movieName: movie.movieName,
+            year: movie.year,
+            rating: movie.rating,
+            ageLimit: movie.ageLimit,
+            description: movie.description,
+            duration: movie.duration,
+            starring: movie.starring,
+            category: movie.category,
+            url: movie.url,
+            movieFullImage: movie.movieFullImage,
+            movieLogoImage: movie.movieLogoImage,
+            movieMobileImage: movie.movieMobileImage,
+            smallMovieImage: movie.smallMovieImage
+        });
+
+        // Save the recommendation
+        await newRecommendation.save();
+
+        //Movie Added 
+        res.status(201).json({ message: "Movie added to Top Five Movies successfully", newRecommendation });
+
+        }  catch (error) {
+
+         // Error Handlin  - Error could be possible due to database error or some kind of CORS Error   
+        console.error("Error Adding Movie to Top Five movies:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
 
 const returnHover = async (req, res) => {
     try {
@@ -737,6 +791,7 @@ module.exports = {
 
     //Admin Movie Management Routes is Been Send From Here
     getAllMovies,
+    addToRecomendationList,
 
 
     returnHover
