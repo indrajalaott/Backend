@@ -270,7 +270,7 @@ const addToRecomendationList = async (req, res) => {
         
 
         // Create a new recommendation with movie details and category
-        const newRecommendation = new Recommendation({
+        const newRecommendation = await Recommendation.create({
             categoryName: categoryName,
             movieName: movie.movieName,
             year: movie.year,
@@ -285,7 +285,7 @@ const addToRecomendationList = async (req, res) => {
             movieLogoImage: movie.movieLogoImage,
             movieMobileImage: movie.movieMobileImage,
             smallMovieImage: movie.smallMovieImage
-        });
+        })
 
         // Save the recommendation
         await newRecommendation.save();
