@@ -235,7 +235,7 @@ const getLastThreeMovies = async (req, res) => {
 // The Function Will Return All Movies in the list -> The Primary use is to Admin Console Categroy Part
 const getAllMovies = async (req, res) => {
     try {
-        const movies = await Movies.find({}, 'movieFullImage description movieName year rating url category  movieMobileImage')
+        const movies = await Movies.find({}, ' description movieName year rating url category  movieMobileImage')
             .sort({ createdAt: -1 });
             
 
