@@ -114,10 +114,13 @@ router.post('/fetch-movie-detailss', adminAuth, adminController.fetchMovieDetail
 
 
 // Routes Related to User Management  - SL0 B3 AN90 -  IV Done by SREEJESH 
-
-
 router.post('/searchUser', adminAuth, adminController.searchUserByMail);
 router.post('/upDateUser', adminAuth, adminController.updateUserPlan);
 router.post('/searchUserByPhone', adminAuth, adminController.searchUserByPhoneNo);
+
+
+//Routes Related to Movie Management  - IV Done by SREEJESH
+router.get('/showallmovies', adminAuth, adminController.getAllMovies);
+
 
 module.exports = router;

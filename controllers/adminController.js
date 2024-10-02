@@ -232,6 +232,23 @@ const getLastThreeMovies = async (req, res) => {
 };
 
 
+// The Function Will Return All Movies in the list -> The Primary use is to Admin Console Categroy Part
+const getAllMovies = async (req, res) => {
+    try {
+        const movies = await Movies.find({}, 'movieFullImage description movieName year rating url category  movieMobileImage')
+            .sort({ createdAt: -1 });
+            
+
+        res.status(200).json(movies);
+    } catch (error) {
+        console.error("Error fetching latest movies:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
+
+
 const returnHover = async (req, res) => {
     try {
         const movies = await Movies.find({}, 'movieFullImage description movieName year rating url category movieLogoImage smallMovieImage movieMobileImage')
@@ -716,6 +733,10 @@ module.exports = {
     searchUserByMail,
     updateUserPlan,
     searchUserByPhoneNo,
+
+
+    //Admin Movie Management Routes is Been Send From Here
+    getAllMovies,
 
 
     returnHover
