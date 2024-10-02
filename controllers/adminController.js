@@ -253,7 +253,7 @@ const addToRecomendationList = async (req, res) => {
         const { movieID, cat } = req.body;
 
         // Determine the category based on 'cat'
-        let categoryName=topfivemovies;
+        var categoryName;
         if (cat === 1) {
             categoryName = 'topfivemovies';
         } else if (cat === 2) {
