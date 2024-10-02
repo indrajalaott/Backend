@@ -267,8 +267,7 @@ const addToRecomendationList = async (req, res) => {
         if (!movie) {
             return res.status(404).json({ error: "Movie not found" });
         }
-        console.log("Hello");
-        console.log(categoryName);
+        
 
         // Create a new recommendation with movie details and category
         const newRecommendation = new Recommendation({
