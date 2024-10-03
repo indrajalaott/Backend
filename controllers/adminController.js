@@ -269,26 +269,7 @@ const addToRecomendationList = async (req, res) => {
         }
         
 
-        // Create a new recommendation with movie details and category
-        const newRecommendation = await Recommendation.create({
-            categoryName: categoryName,
-            movieName: movie.movieName,
-            year: movie.year,
-            rating: movie.rating,
-            ageLimit: movie.ageLimit,
-            description: movie.description,
-            duration: movie.duration,
-            starring: movie.starring,
-            category: movie.category,
-            url: movie.url,
-            movieFullImage: movie.movieFullImage,
-            movieLogoImage: movie.movieLogoImage,
-            movieMobileImage: movie.movieMobileImage,
-            smallMovieImage: movie.smallMovieImage
-        })
-
-        // Save the recommendation
-        await newRecommendation.save();
+       
 
         // Movie Added 
         res.status(201).json({ message: "Movie added to Top Five Movies successfully", newRecommendation });
