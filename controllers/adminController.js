@@ -272,7 +272,7 @@ const addToRecomendationList = async (req, res) => {
        
 
         // Movie Added 
-        res.status(201).json({ message: "Movie added to Top Five Movies successfully", newRecommendation });
+        res.status(201).json({ message: "Movie added to Top Five Movies successfully" });
 
     } catch (error) {
         // Error Handling 
