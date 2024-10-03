@@ -122,6 +122,7 @@ router.post('/searchUserByPhone', adminAuth, adminController.searchUserByPhoneNo
 //Routes Related to Movie Management  - IV Done by SREEJESH
 router.get('/showallmovies', adminAuth, adminController.getAllMovies);
 router.post('/AddtoList', adminAuth, adminController.addToRecomendationList);
+router.get('/viewtopFive', adminAuth, adminController.viewTopFiveMovies);
 
 
 module.exports = router;

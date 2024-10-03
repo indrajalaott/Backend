@@ -247,6 +247,19 @@ const getAllMovies = async (req, res) => {
 };
 
 
+const viewTopFiveMovies = async (req, res) => {
+    try {
+        
+
+
+
+    } catch (error) {
+        console.error("Error fetching Top Five  movies:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
 
 const addToRecomendationList = async (req, res) => {
     try {
@@ -808,6 +821,7 @@ module.exports = {
     //Admin Movie Management Routes is Been Send From Here
     getAllMovies,
     addToRecomendationList,
+    viewTopFiveMovies,
 
 
     returnHover
