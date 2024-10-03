@@ -68,6 +68,8 @@ router.get('/toptrending', adminController.viewTrendingMoviewList);
 //Top 5 Movies Fetching
 router.get('/topfive', adminController.getLastThreeMovies);
 
+router.get('/topfivetest', adminController.viewTopFiveMoviesList);
+
 
 //Latest Movies Fetching
 router.get('/mostviewed', adminController.getLastThreeMovies);
