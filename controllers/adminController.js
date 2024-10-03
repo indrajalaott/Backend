@@ -268,23 +268,44 @@ const addToRecomendationList = async (req, res) => {
             return res.status(404).json({ error: "Movie not found" });
         }
         
-        // Create a new Recommendation entry
-        const newRecommendation = new Recommendation({
-            categoryName,
-            movieName: movie.movieName,
-            year: movie.year,
-            rating: movie.rating,
-            ageLimit: movie.ageLimit,
-            description: movie.description,
-            duration: movie.duration,
-            starring: movie.starring,
-            category: movie.category,
-            url: movie.url,
-            movieMobileImage: movie.movieMobileImage
-        });
+       // Check if a recommendation for the category already exists
+       const recommendation = await Recommendation.findOne({ categoryName });
 
-        // Save the new recommendation to the database
-        await newRecommendation.save();
+       if (recommendation) {
+           // Add the movie to the existing recommendation
+           recommendation.movies.push({
+               movieName: movie.movieName,
+               year: movie.year,
+               rating: movie.rating,
+               ageLimit: movie.ageLimit,
+               description: movie.description,
+               duration: movie.duration,
+               starring: movie.starring,
+               category: movie.category,
+               url: movie.url,
+               movieMobileImage: movie.movieMobileImage
+           });
+           await recommendation.save();
+       } else {
+           // Create a new recommendation if not found
+           const newRecommendation = new Recommendation({
+               categoryName,
+               movies: [{
+                   movieName: movie.movieName,
+                   year: movie.year,
+                   rating: movie.rating,
+                   ageLimit: movie.ageLimit,
+                   description: movie.description,
+                   duration: movie.duration,
+                   starring: movie.starring,
+                   category: movie.category,
+                   url: movie.url,
+                   movieMobileImage: movie.movieMobileImage
+               }]
+           });
+           await newRecommendation.save();
+       }
+
 
         // Movie Added 
         res.status(201).json({ message: "Movie added to Top Five Movies successfully" });
