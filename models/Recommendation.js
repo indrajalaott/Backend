@@ -11,7 +11,7 @@ const recommendationSchema = new mongoose.Schema({
             year: Number,
             rating: {
                 type: String,
-                enum: ['U', 'U/A', 'A']
+                enum: ['U', 'U/A', 'A'],
             },
             ageLimit: String,
             description: String,
@@ -19,17 +19,13 @@ const recommendationSchema = new mongoose.Schema({
             starring: [String],
             category: [String],
             url: {
-                type: String,
+                type: String, 
                 required: true,
-                
             },
             movieMobileImage: String
         }
     ]
 });
-
-
-
 
 const Recommendation = mongoose.model('Recommendation', recommendationSchema);
 
