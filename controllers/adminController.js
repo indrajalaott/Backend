@@ -249,8 +249,23 @@ const getAllMovies = async (req, res) => {
 
 const viewTopFiveMovies = async (req, res) => {
     try {
-        
 
+        // Get the category name from request parameters
+        const { category } = req.params;
+
+        // Find the recommendation with the given category name
+        const recommendation = await Recommendation.findOne({ categoryName: category });
+
+        // If no movies found for the given category
+        if (!recommendation) {
+            return res.status(404).json({ message: `No movies found under category ${category}` });
+        }
+
+        // Return the movies under the specified category
+        res.status(200).json({
+            category: recommendation.categoryName,
+            movies: recommendation.movies,
+        });
 
 
     } catch (error) {
