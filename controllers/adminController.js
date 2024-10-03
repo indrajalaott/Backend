@@ -263,7 +263,7 @@ const viewTopFiveMovies = async (req, res) => {
 
         // Return the movies under the specified category
         res.status(200).json({
-            category: recommendation.categoryName,
+          
             movies: recommendation.movies,
         });
 
