@@ -127,7 +127,7 @@ router.get('/viewTopTrending',adminController.viewTopTrendingMovies);           
 router.post('/RemoveFromTopFive', adminAuth, adminController.removeFromTopFive);   // API For Remove Movie from Top Five
 router.post('/RemoveFromTrending', adminAuth, adminController.removeFromTrending);   // API For Remove Movie from Top Five
 
-router.get('/topmoviesview',adminController.viewTopTrendingMovies);    
+router.get('/topmoviesview',adminController.viewTrendingMoviewList);    
 
 
 module.exports = router;

@@ -284,16 +284,6 @@ const viewTrendingMoviewList = async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
 const viewTopTrendingMovies = async (req, res) => {
     try {
 
@@ -1004,6 +994,9 @@ module.exports = {
     removeFromTopFive,
     viewTopTrendingMovies,
     removeFromTrending,
+
+
+    viewTrendingMoviewList,
 
 
     returnHover
