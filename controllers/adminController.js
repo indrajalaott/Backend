@@ -251,7 +251,7 @@ const viewTopFiveMovies = async (req, res) => {
     try {
 
         // Get the category name from request parameters
-        const { category } = req.params;
+        const { category } = req.body;
 
         // Find the recommendation with the given category name
         const recommendation = await Recommendation.findOne({ categoryName: category });
