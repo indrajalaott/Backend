@@ -123,6 +123,7 @@ router.post('/searchUserByPhone', adminAuth, adminController.searchUserByPhoneNo
 router.get('/showallmovies', adminAuth, adminController.getAllMovies);          //Get all the Movies and show it here
 router.post('/AddtoList', adminAuth, adminController.addToRecomendationList);   //Add Movies to Recomendation List
 router.get('/ViewTop5Movies',adminController.viewTopFiveMovies);                // GET API For 5 Movies Category
+router.get('/viewTopTrending',adminController.viewTopTrendingMovies);           //GET API For Trending Category
 router.post('/RemoveFromTopFive', adminAuth, adminController.removeFromTopFive);   // API For Remove Movie from Top Five
 
 
