@@ -125,6 +125,7 @@ router.post('/AddtoList', adminAuth, adminController.addToRecomendationList);   
 router.get('/ViewTop5Movies',adminController.viewTopFiveMovies);                // GET API For 5 Movies Category
 router.get('/viewTopTrending',adminController.viewTopTrendingMovies);           //GET API For Trending Category
 router.post('/RemoveFromTopFive', adminAuth, adminController.removeFromTopFive);   // API For Remove Movie from Top Five
+router.post('/RemoveFromTrending', adminAuth, adminController.removeFromTrending);   // API For Remove Movie from Top Five
 
 
 module.exports = router;

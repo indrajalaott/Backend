@@ -868,6 +868,48 @@ const removeFromTopFive = async (req, res) => {
 };
 
 
+// This Part of code removes the movie from the list of top trending category
+const removeFromTrending = async (req, res) => {
+    try {
+
+        const { movieID } = req.body;
+
+        // Define the category name to remove the movie from
+        const categoryName = 'toptrendingmovies';
+
+        // Find the recommendation for 'topfivemovies'
+        const recommendation = await Recommendation.findOne({ categoryName });
+
+        if (!recommendation) {
+            return res.status(404).json({ error: "Top Five Movies list not found" });
+        }
+
+        // Find the index of the movie in the topfivemovies list
+        const movieIndex = recommendation.movies.findIndex(
+            (movie) => movie._id.toString() === movieID
+        );
+
+        if (movieIndex === -1) {
+            return res.status(404).json({ error: "Movie not found in Top Five list" });
+        }
+
+        // Remove the movie from the array
+        recommendation.movies.splice(movieIndex, 1);
+
+        // Save the updated recommendation
+        await recommendation.save();
+
+        // Respond with success message
+        res.status(200).json({ message: "Movie removed from Top Five Movies successfully" });
+
+
+    } catch (error) {
+        console.error("Error Removing Movie From Top Five  movies:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
 
 
 module.exports = {
@@ -909,6 +951,7 @@ module.exports = {
     viewTopFiveMovies,
     removeFromTopFive,
     viewTopTrendingMovies,
+    removeFromTrending,
 
 
     returnHover
