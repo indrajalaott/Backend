@@ -309,7 +309,7 @@ const addToRecomendationList = async (req, res) => {
         const { movieID, cat } = req.body;
 
         // Determine the category based on 'cat'
-        var categoryName;
+        let categoryName;
         if (cat === 1) {
             categoryName = 'topfivemovies';
         } else if (cat === 2) {
@@ -318,61 +318,66 @@ const addToRecomendationList = async (req, res) => {
             categoryName = 'topfivemovies'; // Default category if 'cat' is not 1 or 2
         }
 
-        // Find the Movie that need to be added to the category
+        // Find the movie that needs to be added
         const movie = await Movies.findById(movieID);
         if (!movie) {
             return res.status(404).json({ error: "Movie not found" });
         }
-        
-       // Check if a recommendation for the category already exists
-       const recommendation = await Recommendation.findOne({ categoryName });
 
-       if (recommendation) {
-           // Add the movie to the existing recommendation
-           recommendation.movies.push({
-               movieName: movie.movieName,
-               year: movie.year,
-               rating: movie.rating,
-               ageLimit: movie.ageLimit,
-               description: movie.description,
-               duration: movie.duration,
-               starring: movie.starring,
-               category: movie.category,
-               url: movie.url,
-               movieMobileImage: movie.movieMobileImage
-           });
-           await recommendation.save();
-       } else {
-           // Create a new recommendation if not found
-           const newRecommendation = new Recommendation({
-               categoryName,
-               movies: [{
-                   movieName: movie.movieName,
-                   year: movie.year,
-                   rating: movie.rating,
-                   ageLimit: movie.ageLimit,
-                   description: movie.description,
-                   duration: movie.duration,
-                   starring: movie.starring,
-                   category: movie.category,
-                   url: movie.url,
-                   movieMobileImage: movie.movieMobileImage
-               }]
-           });
-           await newRecommendation.save();
-       }
+        // Check if a recommendation for the category already exists
+        let recommendation = await Recommendation.findOne({ categoryName });
 
+        if (recommendation) {
+            // Ensure the movie isn't already in this category
+            const isMovieInCategory = recommendation.movies.some(
+                (m) => m.movieName === movie.movieName
+            );
 
-        // Movie Added 
-        res.status(201).json({ message: "Movie added to Top Five Movies successfully" });
-
+            if (!isMovieInCategory) {
+                // Add the movie to the existing recommendation
+                recommendation.movies.push({
+                    movieName: movie.movieName,
+                    year: movie.year,
+                    rating: movie.rating,
+                    ageLimit: movie.ageLimit,
+                    description: movie.description,
+                    duration: movie.duration,
+                    starring: movie.starring,
+                    category: movie.category,
+                    url: movie.url,
+                    movieMobileImage: movie.movieMobileImage,
+                });
+                await recommendation.save();
+                return res.status(201).json({ message: "Movie added successfully to the category" });
+            } else {
+                return res.status(400).json({ error: "Movie is already in this category" });
+            }
+        } else {
+            // Create a new recommendation if not found
+            const newRecommendation = new Recommendation({
+                categoryName,
+                movies: [{
+                    movieName: movie.movieName,
+                    year: movie.year,
+                    rating: movie.rating,
+                    ageLimit: movie.ageLimit,
+                    description: movie.description,
+                    duration: movie.duration,
+                    starring: movie.starring,
+                    category: movie.category,
+                    url: movie.url,
+                    movieMobileImage: movie.movieMobileImage,
+                }],
+            });
+            await newRecommendation.save();
+            return res.status(201).json({ message: "Movie added successfully to the new category" });
+        }
     } catch (error) {
-        // Error Handling 
-        console.error("Error Adding Movie to Top Five movies:", error.message);
+        // Error handling
+        console.error("Error Adding Movie to category:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
-
 
 
 const returnHover = async (req, res) => {
