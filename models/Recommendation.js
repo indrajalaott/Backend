@@ -36,19 +36,14 @@ const recommendationSchema = new mongoose.Schema({
     },
     url: {
         type: String,
+        required: true,
+        unique:true,
     },
-    movieFullImage: {
-        type: String,
-    },
-    movieLogoImage: {
-        type: String,
-    },
+    
     movieMobileImage: {
         type: String,
     },
-    smallMovieImage: {
-        type: String,
-    },
+    
 });
 
 

@@ -9,7 +9,7 @@ const { Carousels } = require('../models/Carousels');
 const Admin = require('../models/Admin');
 const Payment=require('../models/Payment');
 const {User} = require('../models/User');
-const Recommendation = require('../models/Recommendation');
+const {Recommendation} = require('../models/Recommendation');
 
 const adminLogin = async (req, res) => {
     try {
@@ -268,8 +268,23 @@ const addToRecomendationList = async (req, res) => {
             return res.status(404).json({ error: "Movie not found" });
         }
         
+        // Create a new Recommendation entry
+        const newRecommendation = new Recommendation({
+            categoryName,
+            movieName: movie.movieName,
+            year: movie.year,
+            rating: movie.rating,
+            ageLimit: movie.ageLimit,
+            description: movie.description,
+            duration: movie.duration,
+            starring: movie.starring,
+            category: movie.category,
+            url: movie.url,
+            movieMobileImage: movie.movieMobileImage
+        });
 
-       
+        // Save the new recommendation to the database
+        await newRecommendation.save();
 
         // Movie Added 
         res.status(201).json({ message: "Movie added to Top Five Movies successfully" });
