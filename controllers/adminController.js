@@ -9,7 +9,7 @@ const { Carousels } = require('../models/Carousels');
 const Admin = require('../models/Admin');
 const Payment=require('../models/Payment');
 const {User} = require('../models/User');
-const {Recommendation} = require('../models/Recommendation');
+const Recommendation = require('../models/Recommendation');
 
 const adminLogin = async (req, res) => {
     try {
