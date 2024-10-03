@@ -247,6 +247,53 @@ const getAllMovies = async (req, res) => {
 };
 
 
+const viewTrendingMoviewList = async (req, res) => {
+    try {
+        // Get the category name from request parameters
+        const category = "toptrendingmovies";
+
+        // Find the recommendation with the given category name
+        const recommendation = await Recommendation.findOne({ categoryName: category });
+
+        // If no movies found for the given category
+        if (!recommendation) {
+            return res.status(404).json({ message: `No movies found under category ${category}` });
+        }
+
+        // Transform the movie data to include the required fields
+        const formattedMovies = recommendation.movies.map(movie => ({
+            _id: movie._id,
+            movieName: movie.movieName,
+            rating: movie.rating,
+            description: movie.description,
+            category: movie.category,
+            url: movie.url,
+            movieMobileImage: movie.movieMobileImage || '',
+        }));
+
+        // Return the formatted movies under the specified category
+        res.status(200).json(formattedMovies);
+
+    } catch (error) {
+        console.error("Error fetching Top Five movies:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const viewTopTrendingMovies = async (req, res) => {
     try {
 
