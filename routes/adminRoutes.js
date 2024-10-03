@@ -62,7 +62,7 @@ router.get('/Corrosil-Desktop', adminController.returnHover);
 
 
 //Trending Movies Fetching
-router.get('/toptrending', adminController.getLastThreeMovies);
+router.get('/toptrending', adminController.viewTrendingMoviewList);
 
 
 //Top 5 Movies Fetching
